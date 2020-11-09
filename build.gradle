@@ -1,77 +1,81 @@
 buildscript {
-	repositories {
-		jcenter()
-		maven {
-			url "http://files.minecraftforge.net/maven"
-		}
-	}
-	dependencies {
-		classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
-	}
+    repositories {
+        jcenter()
+        maven {
+            url "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+    }
 }
 
 repositories {
-	maven {
-		url "http://maven.thiakil.com"
-	}
-	maven {
-		url "https://maven.mcmoddev.com"
-	}
-	maven {
-		url "http://dvs1.progwml6.com/files/maven"
-	}
+    maven {
+        url "http://maven.thiakil.com"
+    }
+    maven {
+        url "https://maven.mcmoddev.com"
+    }
+    maven {
+        url "http://dvs1.progwml6.com/files/maven"
+    }
 }
 
 apply plugin: "net.minecraftforge.gradle.forge"
 
-version = "${modVersion}-1.12.2"
+version = "L1-1.12.2.002"
 group = "me.paulf.wings"
-archivesBaseName = "wings"
+archivesBaseName = "Wings"
 sourceCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
-	version = "1.12.2-${project.forgeVersion}"
-	runDir = "run"
-	mappings = project.mcpVersion
-	makeObfSourceJar = false
-	clientJvmArgs = serverJvmArgs = [ "-Dfml.coreMods.load=${project.corePlugin}" ]
+    version = "1.12.2-${project.forgeVersion}"
+    runDir = "run"
+    mappings = project.mcpVersion
+    makeObfSourceJar = false
+    clientJvmArgs = serverJvmArgs = ["-Dfml.coreMods.load=${project.corePlugin}"]
 }
 
 jar {
-	manifest {
-		attributes "FMLCorePlugin": project.corePlugin
-		attributes "FMLCorePluginContainsFMLMod": "true"
-	}
+    manifest {
+        attributes "FMLCorePlugin": project.corePlugin
+        attributes "FMLCorePluginContainsFMLMod": "true"
+    }
 }
 
 dependencies {
-	deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
-	deobfCompile "net.ilexiconn:llibrary:1.7.15-1.12.2"
-	deobfCompile "mezz.jei:jei_1.12.2:4.15.+:api"
-	runtime "mezz.jei:jei_1.12.2:4.15.+"
+    deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
+    deobfCompile "net.ilexiconn:llibrary:1.7.15-1.12.2"
 }
 
 // workaround for FML DirectoryDiscoverer limitations
 sourceSets {
-	main {
-		output.resourcesDir = output.classesDir
-	}
+    main {
+        output.resourcesDir = output.classesDir
+    }
 }
 
 jar {
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 // end workaround
 
 processResources {
-	def vars = [
-		"version": project.modVersion,
-		"forgeVersion": project.forgeVersion,
-		"llibraryVersionRange": project.llibraryVersionRange,
-		"jeiVersionRange": project.jeiVersionRange
-	]
-	inputs.properties(vars)
-	from("src/main/template-resources") {
-		expand(vars)
-	}
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
+
+    // copy everything else except the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
 }
