@@ -15,3 +15,9 @@ out/
 .gradle/
 build/
 server_run/
+.idea/gradle.xml
+.idea/misc.xml
+.idea/vcs.xml
+.idea/workspace.xml
+build.gradle
+.gitignore
