@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod.EventBusSubscriber(modid = WingsMod.ID)
+@Mod.EventBusSubscriber(modid = WingsMod.MODID)
 public final class InSomniableEventHandler
 {
     private InSomniableEventHandler()

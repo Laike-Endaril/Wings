@@ -122,7 +122,7 @@ public final class WingsBaublesIntegration
                 if (event.getObject().getItem() instanceof ItemWings)
                 {
                     event.addCapability(
-                            new ResourceLocation(WingsMod.ID, TIFFANY),
+                            new ResourceLocation(WingsMod.MODID, TIFFANY),
                             CapabilityProviders.builder(BaublesCapabilities.CAPABILITY_ITEM_BAUBLE, new BaubleItem(BaubleType.BODY)).build()
                     );
                 }

@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 
-@Mod.EventBusSubscriber(modid = WingsMod.ID, value = Side.CLIENT)
+@Mod.EventBusSubscriber(modid = WingsMod.MODID, value = Side.CLIENT)
 public final class FlightViews
 {
     private static final CapabilityHolder<AbstractClientPlayer, FlightView, CapabilityHolder.State<AbstractClientPlayer, FlightView>> HOLDER = CapabilityHolder.create();
@@ -47,7 +47,7 @@ public final class FlightViews
         if (entity instanceof AbstractClientPlayer)
         {
             event.addCapability(
-                    new ResourceLocation(WingsMod.ID, "flight_view"),
+                    new ResourceLocation(WingsMod.MODID, "flight_view"),
                     HOLDER.state().providerBuilder(new FlightViewDefault(event.getInstance())).build()
             );
         }

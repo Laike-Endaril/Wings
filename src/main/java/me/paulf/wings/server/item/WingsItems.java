@@ -18,8 +18,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@GameRegistry.ObjectHolder(WingsMod.ID)
-@Mod.EventBusSubscriber(modid = WingsMod.ID)
+@GameRegistry.ObjectHolder(WingsMod.MODID)
+@Mod.EventBusSubscriber(modid = WingsMod.MODID)
 public final class WingsItems
 {
     public static final Item FAIRY_DUST = Items.AIR;
@@ -70,8 +70,8 @@ public final class WingsItems
     private static Item createWings(ResourceLocation name, Function<String, Consumer<CapabilityProviders.CompositeBuilder>> capabilities, ConfigWingSettings attributes)
     {
         return Reg.withName(
-                ItemWings.create(capabilities.apply(name.getPath().replace("_wings", "")), attributes.toImmutable()),
-                name.getPath()
+                ItemWings.create(capabilities.apply(name.getResourcePath().replace("_wings", "")), attributes.toImmutable()),
+                name.getResourcePath()
         )
                 .setCreativeTab(ItemGroupWings.instance());
     }
@@ -95,7 +95,7 @@ public final class WingsItems
 
         private static ResourceLocation create(String path)
         {
-            return new ResourceLocation(WingsMod.ID, path);
+            return new ResourceLocation(WingsMod.MODID, path);
         }
     }
 }

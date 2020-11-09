@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
 
-@Mod.EventBusSubscriber(modid = WingsMod.ID)
+@Mod.EventBusSubscriber(modid = WingsMod.MODID)
 public final class InSomniableCapability
 {
     private static final CapabilityHolder<EntityPlayer, InSomniable, CapabilityHolder.State<EntityPlayer, InSomniable>> INSOMNIABLE = CapabilityHolder.create();
@@ -57,7 +57,7 @@ public final class InSomniableCapability
         if (entity instanceof EntityPlayer)
         {
             event.addCapability(
-                    new ResourceLocation(WingsMod.ID, "insomniable"),
+                    new ResourceLocation(WingsMod.MODID, "insomniable"),
                     INSOMNIABLE.state().providerBuilder(new InSomniable())
                             .serializedBy(new InSomniable.Serializer())
                             .build()
@@ -82,7 +82,7 @@ public final class InSomniableCapability
         if (entity instanceof TileEntityNote)
         {
             event.addCapability(
-                    new ResourceLocation(WingsMod.ID, "playable"),
+                    new ResourceLocation(WingsMod.MODID, "playable"),
                     PLAYABLE.state().providerBuilder(new Playable())
                             .serializedBy(new Playable.Serializer())
                             .build()

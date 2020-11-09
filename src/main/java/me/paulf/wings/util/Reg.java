@@ -16,18 +16,18 @@ public final class Reg
     private static <T extends IForgeRegistryEntry.Impl<? super T>> T withName(T entry, String registryName, Consumer<String> translationKeySetter)
     {
         entry.setRegistryName(registryName);
-        translationKeySetter.accept(Util.getName(entry).getNamespace() + "." + Util.underScoreToCamel(registryName));
+        translationKeySetter.accept(Util.getName(entry).getResourceDomain() + "." + Util.underScoreToCamel(registryName));
         return entry;
     }
 
     public static <I extends Item> I withName(I item, String registryName)
     {
-        return withName(item, registryName, item::setTranslationKey);
+        return withName(item, registryName, item::setUnlocalizedName);
     }
 
     public static <B extends Block> B withName(B block, String registryName)
     {
-        return withName(block, registryName, block::setTranslationKey);
+        return withName(block, registryName, block::setUnlocalizedName);
     }
 
     public static Item createItem(Block block)

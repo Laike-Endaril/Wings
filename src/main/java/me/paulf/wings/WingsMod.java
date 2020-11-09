@@ -11,10 +11,13 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import java.util.function.Consumer;
 
-@Mod(modid = WingsMod.ID, useMetadata = true)
+@Mod(modid = WingsMod.MODID, name = WingsMod.NAME, version = WingsMod.VERSION, dependencies = "required-after:llibrary@[1.7,1.8);required-after:llibrary@[1.7,1.8)")
 public final class WingsMod
 {
-    public static final String ID = "wings";
+    public static final String MODID = "wings";
+    public static final String NAME = "Wings";
+    public static final String VERSION = "L1-1.12.2.002";
+
     @SidedProxy(
             clientSide = "me.paulf.wings.client.ClientProxy",
             serverSide = "me.paulf.wings.server.ServerProxy"

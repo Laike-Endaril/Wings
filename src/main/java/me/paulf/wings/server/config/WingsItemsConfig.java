@@ -9,7 +9,7 @@ import net.minecraftforge.common.config.Config;
 
 import java.util.stream.Stream;
 
-@Config(modid = WingsMod.ID, name = WingsMod.ID + "/items", category = "")
+@Config(modid = WingsMod.MODID, name = WingsMod.MODID + "/items", category = "")
 public final class WingsItemsConfig
 {
     private static final int EASIEST = 960, MODERATE = 1920, HARDEST = 2880;

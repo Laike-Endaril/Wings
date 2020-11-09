@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public final class Network implements IMessageHandler<Message, IMessage>
 {
-    private final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(WingsMod.ID);
+    private final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(WingsMod.MODID);
 
     public Network()
     {

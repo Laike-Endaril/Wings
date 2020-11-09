@@ -30,23 +30,19 @@ archivesBaseName = "Wings"
 sourceCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
-    version = "1.12.2-${project.forgeVersion}"
+    version = "1.12.2-14.23.5.2768"
     runDir = "run"
-    mappings = project.mcpVersion
+
+    mappings = "snapshot_20171003"
     makeObfSourceJar = false
-    clientJvmArgs = serverJvmArgs = ["-Dfml.coreMods.load=${project.corePlugin}"]
+    clientJvmArgs = serverJvmArgs = ["-Dfml.coreMods.load=me.paulf.wings.server.asm.plugin.WingsLoadingPlugin"]
 }
 
 jar {
     manifest {
-        attributes "FMLCorePlugin": project.corePlugin
+        attributes "FMLCorePlugin": "me.paulf.wings.server.asm.plugin.WingsLoadingPlugin"
         attributes "FMLCorePluginContainsFMLMod": "true"
     }
-}
-
-dependencies {
-    deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
-    deobfCompile "net.ilexiconn:llibrary:1.7.15-1.12.2"
 }
 
 // workaround for FML DirectoryDiscoverer limitations

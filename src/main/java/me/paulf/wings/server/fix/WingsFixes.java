@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod.EventBusSubscriber(modid = WingsMod.ID)
+@Mod.EventBusSubscriber(modid = WingsMod.MODID)
 public final class WingsFixes
 {
     private static final int DATA_VERSION = 1;
@@ -47,7 +47,7 @@ public final class WingsFixes
             }
             return compound;
         });
-        ModFixs fixer = FMLCommonHandler.instance().getDataFixer().init(WingsMod.ID, DATA_VERSION);
+        ModFixs fixer = FMLCommonHandler.instance().getDataFixer().init(WingsMod.MODID, DATA_VERSION);
         fixer.registerFix(FixTypes.ITEM_INSTANCE, new IFixableData()
         {
             private final String[] lookup = {

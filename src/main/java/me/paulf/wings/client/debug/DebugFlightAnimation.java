@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(value = Side.CLIENT, modid = WingsMod.ID)
+@Mod.EventBusSubscriber(value = Side.CLIENT, modid = WingsMod.MODID)
 public final class DebugFlightAnimation
 {
     private static State state = new DisabledState();

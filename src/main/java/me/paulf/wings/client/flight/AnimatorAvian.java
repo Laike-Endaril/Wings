@@ -200,7 +200,7 @@ public final class AnimatorAvian implements Animator
             double x = (Math.sin(cycle + Mth.PI / 2.0D) - 1.0D) / 2.0D * 20.0D + (1.0D - pos) * 50.0D;
             double y = (Math.sin(cycle) * 20.0D + (1.0D - pos) * 14.0D) *
                     (1.0D - pos * (Math.min(Math.sin(cycle + Mth.PI), 0.0D) / 2.0D + 1.0D) * Math.sin(time));
-            return restPosition.getWingRotation(index, delta).add(x, y, 4.0D);
+            return restPosition.getWingRotation(index, delta).addVector(x, y, 4.0D);
         }
 
         @Override
@@ -228,14 +228,14 @@ public final class AnimatorAvian implements Animator
             float pos = getWeight(index);
             float time = getFlapTime(delta);
             double y = (Math.sin(time) * 5.0D - 14.0D) * pos;
-            return restPosition.getWingRotation(index, delta).add(0.0D, y, 0.0D);
+            return restPosition.getWingRotation(index, delta).addVector(0.0D, y, 0.0D);
         }
 
         @Override
         public Vec3d getFeatherRotation(int index, float delta)
         {
             double x = noise.getValue((time + delta) * 0.17D, index * 0.13D) * 1.25D;
-            return restPosition.getFeatherRotation(index, delta).add(x, 0.0D, 0.0D);
+            return restPosition.getFeatherRotation(index, delta).addVector(x, 0.0D, 0.0D);
         }
 
         @Override
@@ -267,7 +267,7 @@ public final class AnimatorAvian implements Animator
         {
             float pos = getWeight(index);
             float time = getFlapTime(delta);
-            return wing.get(index).add(0.0D, Math.sin(time) * 3.0D * pos, 0.0D);
+            return wing.get(index).addVector(0.0D, Math.sin(time) * 3.0D * pos, 0.0D);
         }
 
         @Override
@@ -275,7 +275,7 @@ public final class AnimatorAvian implements Animator
         {
             float pos = getWeight(index);
             float time = getFlapTime(delta);
-            return feather.get(index).add(0, -Math.sin(time) * 5.0D * pos, 0.0D);
+            return feather.get(index).addVector(0, -Math.sin(time) * 5.0D * pos, 0.0D);
         }
 
         @Override
@@ -300,7 +300,7 @@ public final class AnimatorAvian implements Animator
             double x = (Math.sin(cycle + Mth.PI / 2.0D) - 1.0D) / 2.0D * 16.0D + 8.0D;
             double y = (Math.sin(cycle) * 26.0D + 12.0D) *
                     (1.0D - pos * (Math.min(Math.sin(cycle + Mth.PI), 0.0D) / 2.0D + 1.0D) * Math.sin(time));
-            return restPosition.getWingRotation(index, delta).add(x, y, 0.0D);
+            return restPosition.getWingRotation(index, delta).addVector(x, y, 0.0D);
         }
 
         @Override
@@ -338,7 +338,7 @@ public final class AnimatorAvian implements Animator
         public Vec3d getWingRotation(int index, float delta)
         {
             double n = noise.getValue((time + delta) * 0.18D, index * 0.13D) * 0.92D * (index + 1);
-            return wing.get(index).add(n, 0.0D, n);
+            return wing.get(index).addVector(n, 0.0D, n);
         }
 
         @Override

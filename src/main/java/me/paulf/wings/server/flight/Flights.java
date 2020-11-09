@@ -22,7 +22,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(modid = WingsMod.ID)
+@Mod.EventBusSubscriber(modid = WingsMod.MODID)
 public final class Flights
 {
     private static final CapabilityHolder<EntityPlayer, Flight, CapabilityHolder.State<EntityPlayer, Flight>> HOLDER = CapabilityHolder.create();
@@ -77,7 +77,7 @@ public final class Flights
             };
             FlightDefault flight = factory.get();
             event.addCapability(
-                    new ResourceLocation(WingsMod.ID, "flight"),
+                    new ResourceLocation(WingsMod.MODID, "flight"),
                     HOLDER.state().providerBuilder(flight)
                             .serializedBy(new FlightDefault.Serializer(factory))
                             .build()

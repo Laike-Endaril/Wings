@@ -125,7 +125,7 @@ public final class ClientProxy extends Proxy
         WingForm<A> form = WingForm.of(
                 animator,
                 model,
-                new ResourceLocation(WingsMod.ID, String.format("textures/entity/wings/%s.png", name))
+                new ResourceLocation(WingsMod.MODID, String.format("textures/entity/wings/%s.png", name))
         );
         return builder -> builder.add(FlightApparatusViews.providerBuilder(FlightApparatusViews.create(form)).build());
     }

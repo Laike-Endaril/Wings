@@ -47,7 +47,7 @@ public abstract class Proxy
                 ((NetHandlerPlayServer) event.getHandler()).sendPacket(network.createPacket(new MessageSetWingSettings(WingsItemsConfig.createWingAttributes())));
             }
         });
-        MinecraftForge.EVENT_BUS.register(ModConfigSaver.create(WingsMod.ID));
+        MinecraftForge.EVENT_BUS.register(ModConfigSaver.create(WingsMod.MODID));
     }
 
     protected void init()

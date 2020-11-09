@@ -9,7 +9,7 @@ import org.objectweb.asm.Type;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-@IFMLLoadingPlugin.Name(WingsMod.ID)
+@IFMLLoadingPlugin.Name(WingsMod.MODID)
 @IFMLLoadingPlugin.MCVersion(MinecraftForge.MC_VERSION)
 @IFMLLoadingPlugin.SortingIndex(1002)
 @IFMLLoadingPlugin.TransformerExclusions("me.paulf.wings.server.asm.plugin.")

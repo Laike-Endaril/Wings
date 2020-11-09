@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 
-@Mod.EventBusSubscriber(modid = WingsMod.ID)
+@Mod.EventBusSubscriber(modid = WingsMod.MODID)
 public final class WingsDict
 {
     public static final String AMETHYST_ORE = "oreAmethyst";

@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.Random;
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(modid = WingsMod.ID)
+@Mod.EventBusSubscriber(modid = WingsMod.MODID)
 public final class GenerationHandler
 {
     private static final WorldGenerator FAIRY_DUST_ORE_GENERATOR = newVeinFeature(

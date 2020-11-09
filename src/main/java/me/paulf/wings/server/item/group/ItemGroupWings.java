@@ -9,7 +9,7 @@ public final class ItemGroupWings extends CreativeTabs
 {
     private ItemGroupWings()
     {
-        super(WingsMod.ID);
+        super(WingsMod.MODID);
     }
 
     public static ItemGroupWings instance()
@@ -18,7 +18,7 @@ public final class ItemGroupWings extends CreativeTabs
     }
 
     @Override
-    public ItemStack createIcon()
+    public ItemStack getTabIconItem()
     {
         return new ItemStack(WingsItems.ANGEL_WINGS);
     }

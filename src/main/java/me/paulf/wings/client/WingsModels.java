@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber(value = Side.CLIENT, modid = WingsMod.ID)
+@Mod.EventBusSubscriber(value = Side.CLIENT, modid = WingsMod.MODID)
 public final class WingsModels
 {
     private WingsModels()

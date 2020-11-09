@@ -3,7 +3,7 @@ package me.paulf.wings.server.config;
 import me.paulf.wings.WingsMod;
 import net.minecraftforge.common.config.Config;
 
-@Config(modid = WingsMod.ID, name = WingsMod.ID + "/ores", category = "")
+@Config(modid = WingsMod.MODID, name = WingsMod.MODID + "/ores", category = "")
 public final class WingsOreConfig
 {
     @Config.LangKey("config.wings.ores.entry.fairy_dust")

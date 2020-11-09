@@ -12,8 +12,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-@GameRegistry.ObjectHolder(WingsMod.ID)
-@Mod.EventBusSubscriber(modid = WingsMod.ID)
+@GameRegistry.ObjectHolder(WingsMod.MODID)
+@Mod.EventBusSubscriber(modid = WingsMod.MODID)
 public final class WingsBlocks
 {
     public static final Block FAIRY_DUST_ORE = Blocks.AIR;

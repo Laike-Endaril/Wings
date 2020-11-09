@@ -110,7 +110,7 @@ public final class ItemWings extends Item
                 .add(FlightApparatuses.providerBuilder(SimpleFlightApparatus.builder()
                         .withFlight(((player, wings, direction) ->
                         {
-                            int distance = Math.round((float) direction.length() * 100.0F);
+                            int distance = Math.round((float) direction.lengthVector() * 100.0F);
                             if (distance > 0)
                             {
                                 player.addExhaustion(distance * settings.getFlyingExertion());

@@ -9,13 +9,13 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-@Mod.EventBusSubscriber(modid = WingsMod.ID)
+@Mod.EventBusSubscriber(modid = WingsMod.MODID)
 public final class WingsSounds
 {
     private static final SoundEvent NIL = SoundEvents.ENTITY_PIG_AMBIENT;
-    @GameRegistry.ObjectHolder(WingsMod.ID + ":item.armor.equip_wings")
+    @GameRegistry.ObjectHolder(WingsMod.MODID + ":item.armor.equip_wings")
     public static final SoundEvent ITEM_ARMOR_EQUIP_WINGS = NIL;
-    @GameRegistry.ObjectHolder(WingsMod.ID + ":item.wings.flying")
+    @GameRegistry.ObjectHolder(WingsMod.MODID + ":item.wings.flying")
     public static final SoundEvent ITEM_WINGS_FLYING = NIL;
 
     private WingsSounds()
@@ -33,6 +33,6 @@ public final class WingsSounds
 
     private static SoundEvent create(String name)
     {
-        return new SoundEvent(new ResourceLocation(WingsMod.ID, name)).setRegistryName(name);
+        return new SoundEvent(new ResourceLocation(WingsMod.MODID, name)).setRegistryName(name);
     }
 }
