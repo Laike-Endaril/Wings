@@ -30,11 +30,11 @@ public final class FlightDefault implements Flight
 
     private static final float MAX_SPEED = 0.0715F;
 
-    private static final float Y_BOOST = 0.05F;
+    private static final float Y_BOOST = 0.02F;
 
     private static final float FALL_REDUCTION = 0.9F;
 
-    private static final float PITCH_OFFSET = 30.0F;
+    private static final float PITCH_OFFSET = 60.0F;
 
     private final List<FlyingListener> flyingListeners = Lists.newArrayList();
 
@@ -137,12 +137,9 @@ public final class FlightDefault implements Flight
                 float pitch = -Mth.toRadians(player.rotationPitch - PITCH_OFFSET * elevationBoost);
                 float yaw = -Mth.toRadians(player.rotationYaw) - Mth.PI;
                 float vxz = -MathHelper.cos(pitch);
-                float vy = MathHelper.sin(pitch);
-                float vz = MathHelper.cos(yaw);
-                float vx = MathHelper.sin(yaw);
-                player.motionX += vx * vxz * speed;
-                player.motionY += vy * speed + Y_BOOST * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D);
-                player.motionZ += vz * vxz * speed;
+                player.motionX += MathHelper.sin(yaw) * vxz * speed;
+                player.motionY += MathHelper.sin(pitch) * speed + Y_BOOST * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D);
+                player.motionZ += MathHelper.cos(yaw) * vxz * speed;
             }
             if (canLand(player, wings))
             {
