@@ -24,7 +24,7 @@ repositories {
 
 apply plugin: "net.minecraftforge.gradle.forge"
 
-version = "L1-1.12.2.002"
+version = "L-1.12.2.003"
 group = "me.paulf.wings"
 archivesBaseName = "Wings"
 sourceCompatibility = JavaVersion.VERSION_1_8

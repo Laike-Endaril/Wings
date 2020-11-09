@@ -16,7 +16,7 @@ public final class WingsMod
 {
     public static final String MODID = "wings";
     public static final String NAME = "Wings";
-    public static final String VERSION = "L1-1.12.2.002";
+    public static final String VERSION = "L-1.12.2.003";
 
     @SidedProxy(
             clientSide = "me.paulf.wings.client.ClientProxy",
