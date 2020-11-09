@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -137,9 +138,13 @@ public final class FlightDefault implements Flight
                 float pitch = -Mth.toRadians(player.rotationPitch - PITCH_OFFSET * elevationBoost);
                 float yaw = -Mth.toRadians(player.rotationYaw) - Mth.PI;
                 float vxz = -MathHelper.cos(pitch);
-                player.motionX += MathHelper.sin(yaw) * vxz * speed;
-                player.motionY += MathHelper.sin(pitch) * speed + Y_BOOST * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D);
-                player.motionZ += MathHelper.cos(yaw) * vxz * speed;
+
+                World world = player.world;
+                double rainModifier = world.isRainingAt(player.getPosition()) ? 1 - player.world.rainingStrength * 0.3 : 1;
+
+                player.motionX += rainModifier * MathHelper.sin(yaw) * vxz * speed;
+                player.motionY += rainModifier * MathHelper.sin(pitch) * speed + Y_BOOST * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D);
+                player.motionZ += rainModifier * MathHelper.cos(yaw) * vxz * speed;
             }
             if (canLand(player, wings))
             {
