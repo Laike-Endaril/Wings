@@ -30,101 +30,121 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = WingsMod.ID)
-public final class DebugFlightAnimation {
-	private DebugFlightAnimation() {}
+public final class DebugFlightAnimation
+{
+    private static State state = new DisabledState();
 
-	private static State state = new DisabledState();
+    private DebugFlightAnimation()
+    {
+    }
 
-	@SubscribeEvent
-	public static void init(ModelRegistryEvent event) {
-		state = state.init();
-	}
+    @SubscribeEvent
+    public static void init(ModelRegistryEvent event)
+    {
+        state = state.init();
+    }
 
-	private interface State {
-		State init();
-	}
+    private interface State
+    {
+        State init();
+    }
 
-	protected static final class DisabledState implements State {
-		@Override
-		public State init() {
-			return this;
-		}
-	}
+    protected static final class DisabledState implements State
+    {
+        @Override
+        public State init()
+        {
+            return this;
+        }
+    }
 
-	private static final class EnabledState implements State {
-		@Override
-		public State init() {
-			return this;
-		}
-	}
+    private static final class EnabledState implements State
+    {
+        @Override
+        public State init()
+        {
+            return this;
+        }
+    }
 
-	private static final class EnableState implements State {
-		@Override
-		public State init() {
-			MinecraftForge.EVENT_BUS.register(new Handler());
-			return new EnabledState();
-		}
-	}
+    private static final class EnableState implements State
+    {
+        @Override
+        public State init()
+        {
+            MinecraftForge.EVENT_BUS.register(new Handler());
+            return new EnabledState();
+        }
+    }
 
 
-	private static final class Handler {
-		private static final GameProfile PROFILE = new GameProfile(
-			UUID.fromString("617ab577-0da7-4d6a-a80d-0b516544369d"),
-			"ModDeveloper"
-		);
+    private static final class Handler
+    {
+        private static final GameProfile PROFILE = new GameProfile(
+                UUID.fromString("617ab577-0da7-4d6a-a80d-0b516544369d"),
+                "ModDeveloper"
+        );
 
-		private EntityPlayer player;
+        private EntityPlayer player;
 
-		@SubscribeEvent
-		public void tick(TickEvent.ClientTickEvent event) {
-			if (event.phase == TickEvent.Phase.END) {
-				Minecraft mc = Minecraft.getMinecraft();
-				World world = mc.world;
-				if (world != null && (player == null || player.world != world)) {
-					player = new EntityOtherPlayerMP(world, PROFILE) {{
-						getDataManager().set(PLAYER_MODEL_FLAG, (byte) 0xFF);
-					}};
-					player.setEntityId(-player.getEntityId());
-					player.setPosition(0.0D, 62.0D, 0.0D);
-					player.prevPosZ = -1.0D;
-					player.prevPosY = 63.0D;
-					Item item = WingsItems.ANGEL_WINGS;
-					player.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(item));
-					item.onItemRightClick(world, player, EnumHand.MAIN_HAND);
-					Flight flight = Flights.get(player);
-					if (flight != null) {
-						flight.setIsFlying(true);
-					}
-					IntHashMap<Entity> entities = ReflectionHelper.getPrivateValue(World.class, world, "entitiesById");
-					entities.addKey(player.getEntityId(), player);
-				}
-				if (player != null && mc.getConnection() != null) {
-					player.ticksExisted++;
-					player.onUpdate();
-				}
-			}
-		}
+        @SubscribeEvent
+        public void tick(TickEvent.ClientTickEvent event)
+        {
+            if (event.phase == TickEvent.Phase.END)
+            {
+                Minecraft mc = Minecraft.getMinecraft();
+                World world = mc.world;
+                if (world != null && (player == null || player.world != world))
+                {
+                    player = new EntityOtherPlayerMP(world, PROFILE)
+                    {{
+                        getDataManager().set(PLAYER_MODEL_FLAG, (byte) 0xFF);
+                    }};
+                    player.setEntityId(-player.getEntityId());
+                    player.setPosition(0.0D, 62.0D, 0.0D);
+                    player.prevPosZ = -1.0D;
+                    player.prevPosY = 63.0D;
+                    Item item = WingsItems.ANGEL_WINGS;
+                    player.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(item));
+                    item.onItemRightClick(world, player, EnumHand.MAIN_HAND);
+                    Flight flight = Flights.get(player);
+                    if (flight != null)
+                    {
+                        flight.setIsFlying(true);
+                    }
+                    IntHashMap<Entity> entities = ReflectionHelper.getPrivateValue(World.class, world, "entitiesById");
+                    entities.addKey(player.getEntityId(), player);
+                }
+                if (player != null && mc.getConnection() != null)
+                {
+                    player.ticksExisted++;
+                    player.onUpdate();
+                }
+            }
+        }
 
-		@SubscribeEvent
-		public void render(RenderWorldLastEvent event) {
-			Minecraft mc = Minecraft.getMinecraft();
-			RenderManager manager = mc.getRenderManager();
-			if (mc.world != null && mc.player != null && manager.renderViewEntity != null) {
-				GlStateManager.enableFog();
-				RenderHelper.enableStandardItemLighting();
-				GlStateManager.color(1.0F, 1.0F, 1.0F);
-				manager.renderEntity(
-					player,
-					player.posX - TileEntityRendererDispatcher.staticPlayerX,
-					player.posY - TileEntityRendererDispatcher.staticPlayerY,
-					player.posZ - TileEntityRendererDispatcher.staticPlayerZ,
-					0.0F,
-					event.getPartialTicks(),
-					false
-				);
-				RenderHelper.disableStandardItemLighting();
-				GlStateManager.disableFog();
-			}
-		}
-	}
+        @SubscribeEvent
+        public void render(RenderWorldLastEvent event)
+        {
+            Minecraft mc = Minecraft.getMinecraft();
+            RenderManager manager = mc.getRenderManager();
+            if (mc.world != null && mc.player != null && manager.renderViewEntity != null)
+            {
+                GlStateManager.enableFog();
+                RenderHelper.enableStandardItemLighting();
+                GlStateManager.color(1.0F, 1.0F, 1.0F);
+                manager.renderEntity(
+                        player,
+                        player.posX - TileEntityRendererDispatcher.staticPlayerX,
+                        player.posY - TileEntityRendererDispatcher.staticPlayerY,
+                        player.posZ - TileEntityRendererDispatcher.staticPlayerZ,
+                        0.0F,
+                        event.getPartialTicks(),
+                        false
+                );
+                RenderHelper.disableStandardItemLighting();
+                GlStateManager.disableFog();
+            }
+        }
+    }
 }

@@ -7,10 +7,11 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Integration {
-	String id();
+public @interface Integration
+{
+    String id();
 
-	String name();
+    String name();
 
-	String condition();
+    String condition();
 }

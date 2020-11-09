@@ -1,13 +1,14 @@
 package me.paulf.wings.server.item;
 
-public interface WingSettings {
-	int getRequiredFlightSatiation();
+public interface WingSettings
+{
+    int getRequiredFlightSatiation();
 
-	float getFlyingExertion();
+    float getFlyingExertion();
 
-	int getRequiredLandSatiation();
+    int getRequiredLandSatiation();
 
-	float getLandingExertion();
+    float getLandingExertion();
 
-	int getItemDurability();
+    int getItemDurability();
 }

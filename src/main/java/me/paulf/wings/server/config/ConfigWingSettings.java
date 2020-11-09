@@ -6,77 +6,87 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Config;
 
 @SuppressWarnings("DeprecatedIsStillUsed")
-public final class ConfigWingSettings implements WingSettings {
-	private final ResourceLocation key;
+public final class ConfigWingSettings implements WingSettings
+{
+    private final ResourceLocation key;
 
-	@Deprecated
-	@Config.LangKey("config.wings.items.settings.requiredFlightSatiation")
-	@Config.RangeInt(min = 0, max = 20)
-	public int requiredFlightSatiation;
+    @Deprecated
+    @Config.LangKey("config.wings.items.settings.requiredFlightSatiation")
+    @Config.RangeInt(min = 0, max = 20)
+    public int requiredFlightSatiation;
 
-	@Deprecated
-	@Config.LangKey("config.wings.items.settings.flyingExertion")
-	@Config.RangeDouble(min = 0.0D, max = 10.0D)
-	public double flyingExertion;
+    @Deprecated
+    @Config.LangKey("config.wings.items.settings.flyingExertion")
+    @Config.RangeDouble(min = 0.0D, max = 10.0D)
+    public double flyingExertion;
 
-	@Deprecated
-	@Config.LangKey("config.wings.items.settings.requiredLandSatiation")
-	@Config.RangeInt(min = 0, max = 20)
-	public int requiredLandSatiation;
+    @Deprecated
+    @Config.LangKey("config.wings.items.settings.requiredLandSatiation")
+    @Config.RangeInt(min = 0, max = 20)
+    public int requiredLandSatiation;
 
-	@Deprecated
-	@Config.LangKey("config.wings.items.settings.landingExertion")
-	@Config.RangeDouble(min = 0.0D, max = 10.0D)
-	public double landingExertion;
+    @Deprecated
+    @Config.LangKey("config.wings.items.settings.landingExertion")
+    @Config.RangeDouble(min = 0.0D, max = 10.0D)
+    public double landingExertion;
 
-	@Deprecated
-	@Config.LangKey("config.wings.items.settings.durability")
-	@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
-	public int itemDurability;
+    @Deprecated
+    @Config.LangKey("config.wings.items.settings.durability")
+    @Config.RangeInt(min = 0, max = Short.MAX_VALUE)
+    public int itemDurability;
 
-	ConfigWingSettings(ResourceLocation key, int itemDurability) {
-		this(key, 7, 0.001D, 2, 0.08D, itemDurability);
-	}
+    ConfigWingSettings(ResourceLocation key, int itemDurability)
+    {
+        this(key, 7, 0.001D, 2, 0.08D, itemDurability);
+    }
 
-	private ConfigWingSettings(ResourceLocation key, int requiredFlightSatiation, double flyingExertion, int requiredLandSatiation, double landingExertion, int itemDurability) {
-		this.key = key;
-		this.requiredFlightSatiation = requiredFlightSatiation;
-		this.flyingExertion = flyingExertion;
-		this.requiredLandSatiation = requiredLandSatiation;
-		this.landingExertion = landingExertion;
-		this.itemDurability = itemDurability;
-	}
+    private ConfigWingSettings(ResourceLocation key, int requiredFlightSatiation, double flyingExertion, int requiredLandSatiation, double landingExertion, int itemDurability)
+    {
+        this.key = key;
+        this.requiredFlightSatiation = requiredFlightSatiation;
+        this.flyingExertion = flyingExertion;
+        this.requiredLandSatiation = requiredLandSatiation;
+        this.landingExertion = landingExertion;
+        this.itemDurability = itemDurability;
+    }
 
-	public ResourceLocation getKey() {
-		return key;
-	}
+    public ResourceLocation getKey()
+    {
+        return key;
+    }
 
-	@Override
-	public int getRequiredFlightSatiation() {
-		return requiredFlightSatiation;
-	}
+    @Override
+    public int getRequiredFlightSatiation()
+    {
+        return requiredFlightSatiation;
+    }
 
-	@Override
-	public float getFlyingExertion() {
-		return (float) flyingExertion;
-	}
+    @Override
+    public float getFlyingExertion()
+    {
+        return (float) flyingExertion;
+    }
 
-	@Override
-	public int getRequiredLandSatiation() {
-		return requiredLandSatiation;
-	}
+    @Override
+    public int getRequiredLandSatiation()
+    {
+        return requiredLandSatiation;
+    }
 
-	@Override
-	public float getLandingExertion() {
-		return (float) landingExertion;
-	}
+    @Override
+    public float getLandingExertion()
+    {
+        return (float) landingExertion;
+    }
 
-	@Override
-	public int getItemDurability() {
-		return itemDurability;
-	}
+    @Override
+    public int getItemDurability()
+    {
+        return itemDurability;
+    }
 
-	public WingSettings toImmutable() {
-		return ImmutableWingSettings.of(getRequiredFlightSatiation(), getFlyingExertion(), getRequiredLandSatiation(), getLandingExertion(), getItemDurability());
-	}
+    public WingSettings toImmutable()
+    {
+        return ImmutableWingSettings.of(getRequiredFlightSatiation(), getFlyingExertion(), getRequiredLandSatiation(), getLandingExertion(), getItemDurability());
+    }
 }

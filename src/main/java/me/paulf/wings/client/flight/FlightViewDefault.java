@@ -18,122 +18,152 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.function.Consumer;
 
-public final class FlightViewDefault implements FlightView {
-	private final Flight flight;
+public final class FlightViewDefault implements FlightView
+{
+    private final Flight flight;
 
-	private final WingState absentAnimator = new WingState(Items.AIR, new Strategy() {
-		@Override
-		public void update(EntityPlayer player) {}
+    private final WingState absentAnimator = new WingState(Items.AIR, new Strategy()
+    {
+        @Override
+        public void update(EntityPlayer player)
+        {
+        }
 
-		@Override
-		public void ifFormPresent(Consumer<FormRenderer> consumer) {}
-	});
+        @Override
+        public void ifFormPresent(Consumer<FormRenderer> consumer)
+        {
+        }
+    });
 
-	private final SmoothingFunction eyeHeightFunc = SmoothingFunction.create(t -> Mth.easeOutCirc(Mth.easeInOut(t)));
+    private final SmoothingFunction eyeHeightFunc = SmoothingFunction.create(t -> Mth.easeOutCirc(Mth.easeInOut(t)));
 
-	private WingState animator = absentAnimator;
+    private WingState animator = absentAnimator;
 
-	public FlightViewDefault(Flight flight) {
-		this.flight = flight;
-	}
+    public FlightViewDefault(Flight flight)
+    {
+        this.flight = flight;
+    }
 
-	@Override
-	public void ifFormPresent(Consumer<FormRenderer> consumer) {
-		animator.ifFormPresent(consumer);
-	}
+    @Override
+    public void ifFormPresent(Consumer<FormRenderer> consumer)
+    {
+        animator.ifFormPresent(consumer);
+    }
 
-	@Override
-	public void tick(EntityPlayer player, ItemStack wings) {
-		if (!wings.isEmpty()) {
-			FlightApparatusView view = FlightApparatusViews.get(wings);
-			if (view == null) {
-				animator = animator.next();
-			} else {
-				animator = animator.next(wings, view);
-			}
-			animator.update(player);
-		}
-	}
+    @Override
+    public void tick(EntityPlayer player, ItemStack wings)
+    {
+        if (!wings.isEmpty())
+        {
+            FlightApparatusView view = FlightApparatusViews.get(wings);
+            if (view == null)
+            {
+                animator = animator.next();
+            }
+            else
+            {
+                animator = animator.next(wings, view);
+            }
+            animator.update(player);
+        }
+    }
 
-	@Override
-	public void tickEyeHeight(float value, float delta, FloatConsumer valueOut) {
-		eyeHeightFunc.accept(flight.getFlyingAmount(delta), SmoothingFunction.Sign.valueOf(flight.isFlying()), value, valueOut);
-	}
+    @Override
+    public void tickEyeHeight(float value, float delta, FloatConsumer valueOut)
+    {
+        eyeHeightFunc.accept(flight.getFlyingAmount(delta), SmoothingFunction.Sign.valueOf(flight.isFlying()), value, valueOut);
+    }
 
-	private interface Strategy {
-		void update(EntityPlayer player);
+    private interface Strategy
+    {
+        void update(EntityPlayer player);
 
-		void ifFormPresent(Consumer<FormRenderer> consumer);
-	}
+        void ifFormPresent(Consumer<FormRenderer> consumer);
+    }
 
-	private final class WingState {
-		private final Item item;
+    private final class WingState
+    {
+        private final Item item;
 
-		private final Strategy behavior;
+        private final Strategy behavior;
 
-		private WingState(Item item, Strategy behavior) {
-			this.item = item;
-			this.behavior = behavior;
-		}
+        private WingState(Item item, Strategy behavior)
+        {
+            this.item = item;
+            this.behavior = behavior;
+        }
 
-		private WingState next() {
-			return absentAnimator;
-		}
+        private WingState next()
+        {
+            return absentAnimator;
+        }
 
-		private WingState next(ItemStack stack, FlightApparatusView view) {
-			Item item = stack.getItem();
-			if (this.item.equals(item)) {
-				return this;
-			}
-			return newState(item, view.getForm());
-		}
+        private WingState next(ItemStack stack, FlightApparatusView view)
+        {
+            Item item = stack.getItem();
+            if (this.item.equals(item))
+            {
+                return this;
+            }
+            return newState(item, view.getForm());
+        }
 
-		private <T extends Animator> WingState newState(Item item, WingForm<T> shape) {
-			return new WingState(item, new Strategy() {
-				private final T animator = shape.createAnimator();
+        private <T extends Animator> WingState newState(Item item, WingForm<T> shape)
+        {
+            return new WingState(item, new Strategy()
+            {
+                private final T animator = shape.createAnimator();
 
-				private State state = new StateIdle();
+                private State state = new StateIdle();
 
-				@Override
-				public void update(EntityPlayer player) {
-					animator.update();
-					State state = this.state.update(
-						flight,
-						player.posX - player.prevPosX,
-						player.posY - player.prevPosY,
-						player.posZ - player.prevPosZ,
-						player,
-						FlightApparatuses.find(player)
-					);
-					if (!this.state.equals(state)) {
-						state.beginAnimation(animator);
-					}
-					this.state = state;
-				}
+                @Override
+                public void update(EntityPlayer player)
+                {
+                    animator.update();
+                    State state = this.state.update(
+                            flight,
+                            player.posX - player.prevPosX,
+                            player.posY - player.prevPosY,
+                            player.posZ - player.prevPosZ,
+                            player,
+                            FlightApparatuses.find(player)
+                    );
+                    if (!this.state.equals(state))
+                    {
+                        state.beginAnimation(animator);
+                    }
+                    this.state = state;
+                }
 
-				@Override
-				public void ifFormPresent(Consumer<FormRenderer> consumer) {
-					consumer.accept(new FormRenderer() {
-						@Override
-						public ResourceLocation getTexture() {
-							return shape.getTexture();
-						}
+                @Override
+                public void ifFormPresent(Consumer<FormRenderer> consumer)
+                {
+                    consumer.accept(new FormRenderer()
+                    {
+                        @Override
+                        public ResourceLocation getTexture()
+                        {
+                            return shape.getTexture();
+                        }
 
-						@Override
-						public void render(float delta, float scale) {
-							shape.getModel().render(animator, delta, scale);
-						}
-					});
-				}
-			});
-		}
+                        @Override
+                        public void render(float delta, float scale)
+                        {
+                            shape.getModel().render(animator, delta, scale);
+                        }
+                    });
+                }
+            });
+        }
 
-		private void update(EntityPlayer player) {
-			behavior.update(player);
-		}
+        private void update(EntityPlayer player)
+        {
+            behavior.update(player);
+        }
 
-		private void ifFormPresent(Consumer<FormRenderer> consumer) {
-			behavior.ifFormPresent(consumer);
-		}
-	}
+        private void ifFormPresent(Consumer<FormRenderer> consumer)
+        {
+            behavior.ifFormPresent(consumer);
+        }
+    }
 }

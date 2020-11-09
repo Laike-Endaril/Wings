@@ -5,20 +5,24 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 
-public interface FlightApparatus {
-	void onFlight(EntityPlayer player, ItemStack stack, Vec3d direction);
+public interface FlightApparatus
+{
+    void onFlight(EntityPlayer player, ItemStack stack, Vec3d direction);
 
-	void onLanding(EntityPlayer player, ItemStack stack, Vec3d direction);
+    void onLanding(EntityPlayer player, ItemStack stack, Vec3d direction);
 
-	boolean isUsable(EntityPlayer player, ItemStack stack);
+    boolean isUsable(EntityPlayer player, ItemStack stack);
 
-	boolean isLandable(EntityPlayer player, ItemStack stack);
+    boolean isLandable(EntityPlayer player, ItemStack stack);
 
-	FlightState createState(Flight flight);
+    FlightState createState(Flight flight);
 
-	interface FlightState {
-		FlightState VOID = (player, stack) -> {};
+    interface FlightState
+    {
+        FlightState VOID = (player, stack) ->
+        {
+        };
 
-		void onUpdate(EntityPlayer player, ItemStack stack);
-	}
+        void onUpdate(EntityPlayer player, ItemStack stack);
+    }
 }

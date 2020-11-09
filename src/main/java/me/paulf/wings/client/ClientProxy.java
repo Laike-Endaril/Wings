@@ -35,79 +35,98 @@ import org.lwjgl.input.Keyboard;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public final class ClientProxy extends Proxy {
-	private final ModelWings<AnimatorAvian> avianWings = new ModelWingsAvian();
+public final class ClientProxy extends Proxy
+{
+    private final ModelWings<AnimatorAvian> avianWings = new ModelWingsAvian();
 
-	private final ModelWings<AnimatorInsectoid> insectoidWings = new ModelWingsInsectoid();
+    private final ModelWings<AnimatorInsectoid> insectoidWings = new ModelWingsInsectoid();
 
-	@Override
-	public void preinit() {
-		super.preinit();
-		CapabilityManager.INSTANCE.register(FlightView.class, SimpleStorage.ofVoid(), () -> {
-			throw new UnsupportedOperationException();
-		});
-		CapabilityManager.INSTANCE.register(FlightApparatusView.class, SimpleStorage.ofVoid(), () -> {
-			throw new UnsupportedOperationException();
-		});
-		MinecraftForge.EVENT_BUS.register(KeyInputListener.builder()
-			.category("key.categories.wings")
-				.key("key.wings.fly", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_R)
-					.onPress(() -> {
-						EntityPlayer player = Minecraft.getMinecraft().player;
-						Flight flight = Flights.get(player);
-						if (flight != null && flight.canFly(player)) {
-							flight.toggleIsFlying(Flight.PlayerSet.ofOthers());
-						}
-					})
-			.build()
-		);
-	}
+    @Override
+    public void preinit()
+    {
+        super.preinit();
+        CapabilityManager.INSTANCE.register(FlightView.class, SimpleStorage.ofVoid(), () ->
+        {
+            throw new UnsupportedOperationException();
+        });
+        CapabilityManager.INSTANCE.register(FlightApparatusView.class, SimpleStorage.ofVoid(), () ->
+        {
+            throw new UnsupportedOperationException();
+        });
+        MinecraftForge.EVENT_BUS.register(KeyInputListener.builder()
+                .category("key.categories.wings")
+                .key("key.wings.fly", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_R)
+                .onPress(() ->
+                {
+                    EntityPlayer player = Minecraft.getMinecraft().player;
+                    Flight flight = Flights.get(player);
+                    if (flight != null && flight.canFly(player))
+                    {
+                        flight.toggleIsFlying(Flight.PlayerSet.ofOthers());
+                    }
+                })
+                .build()
+        );
+    }
 
-	@Override
-	protected void init() {
-		super.init();
-		Minecraft mc = Minecraft.getMinecraft();
-		ItemColors colors = mc.getItemColors();
-		colors.registerItemColorHandler((stack, pass) -> pass == 0 ? 0x9B172D : 0xFFFFFF, WingsItems.BAT_BLOOD);
-		for (RenderPlayer renderer : mc.getRenderManager().getSkinMap().values()) {
-			renderer.addLayer(new LayerWings(renderer, (player, scale, bodyTransform) -> {
-				if (player.isSneaking()) {
-					GlStateManager.translate(0.0F, 0.2F, 0.0F);
-				}
-				bodyTransform.accept(scale);
-			}));
-		}
-	}
+    @Override
+    protected void init()
+    {
+        super.init();
+        Minecraft mc = Minecraft.getMinecraft();
+        ItemColors colors = mc.getItemColors();
+        colors.registerItemColorHandler((stack, pass) -> pass == 0 ? 0x9B172D : 0xFFFFFF, WingsItems.BAT_BLOOD);
+        for (RenderPlayer renderer : mc.getRenderManager().getSkinMap().values())
+        {
+            renderer.addLayer(new LayerWings(renderer, (player, scale, bodyTransform) ->
+            {
+                if (player.isSneaking())
+                {
+                    GlStateManager.translate(0.0F, 0.2F, 0.0F);
+                }
+                bodyTransform.accept(scale);
+            }));
+        }
+    }
 
-	@Override
-	public void addFlightListeners(EntityPlayer player, Flight flight) {
-		super.addFlightListeners(player, flight);
-		if (player.isUser()) {
-			Flight.Notifier notifier = Flight.Notifier.of(
-				() -> {},
-				p -> {},
-				() -> network.sendToServer(new MessageControlFlying(flight.isFlying()))
-			);
-			flight.registerSyncListener(players -> players.notify(notifier));
-		}
-	}
+    @Override
+    public void addFlightListeners(EntityPlayer player, Flight flight)
+    {
+        super.addFlightListeners(player, flight);
+        if (player.isUser())
+        {
+            Flight.Notifier notifier = Flight.Notifier.of(
+                    () ->
+                    {
+                    },
+                    p ->
+                    {
+                    },
+                    () -> network.sendToServer(new MessageControlFlying(flight.isFlying()))
+            );
+            flight.registerSyncListener(players -> players.notify(notifier));
+        }
+    }
 
-	@Override
-	public Consumer<CapabilityProviders.CompositeBuilder> createAvianWings(String name) {
-		return createWings(name, AnimatorAvian::new, avianWings);
-	}
+    @Override
+    public Consumer<CapabilityProviders.CompositeBuilder> createAvianWings(String name)
+    {
+        return createWings(name, AnimatorAvian::new, avianWings);
+    }
 
-	@Override
-	public Consumer<CapabilityProviders.CompositeBuilder> createInsectoidWings(String name) {
-		return createWings(name, AnimatorInsectoid::new, insectoidWings);
-	}
+    @Override
+    public Consumer<CapabilityProviders.CompositeBuilder> createInsectoidWings(String name)
+    {
+        return createWings(name, AnimatorInsectoid::new, insectoidWings);
+    }
 
-	private <A extends Animator> Consumer<CapabilityProviders.CompositeBuilder> createWings(String name, Supplier<A> animator, ModelWings<A> model) {
-		WingForm<A> form = WingForm.of(
-			animator,
-			model,
-			new ResourceLocation(WingsMod.ID, String.format("textures/entity/wings/%s.png", name))
-		);
-		return builder -> builder.add(FlightApparatusViews.providerBuilder(FlightApparatusViews.create(form)).build());
-	}
+    private <A extends Animator> Consumer<CapabilityProviders.CompositeBuilder> createWings(String name, Supplier<A> animator, ModelWings<A> model)
+    {
+        WingForm<A> form = WingForm.of(
+                animator,
+                model,
+                new ResourceLocation(WingsMod.ID, String.format("textures/entity/wings/%s.png", name))
+        );
+        return builder -> builder.add(FlightApparatusViews.providerBuilder(FlightApparatusViews.create(form)).build());
+    }
 }

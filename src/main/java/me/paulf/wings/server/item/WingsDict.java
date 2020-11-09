@@ -11,23 +11,26 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
-public final class WingsDict {
-	private WingsDict() {}
+public final class WingsDict
+{
+    public static final String AMETHYST_ORE = "oreAmethyst";
+    public static final String FAIRY_DUST = "dustFairy";
+    public static final String AMETHYST_GEM = "gemAmethyst";
 
-	public static final String AMETHYST_ORE = "oreAmethyst";
+    private WingsDict()
+    {
+    }
 
-	public static final String FAIRY_DUST = "dustFairy";
+    @SubscribeEvent
+    public static void onRegister(RegistryEvent.Register<IRecipe> event)
+    {
+        OreDictionary.registerOre(AMETHYST_ORE, WingsBlocks.AMETHYST_ORE);
+        OreDictionary.registerOre(FAIRY_DUST, WingsItems.FAIRY_DUST);
+        OreDictionary.registerOre(AMETHYST_GEM, WingsItems.AMETHYST);
+    }
 
-	public static final String AMETHYST_GEM = "gemAmethyst";
-
-	@SubscribeEvent
-	public static void onRegister(RegistryEvent.Register<IRecipe> event) {
-		OreDictionary.registerOre(AMETHYST_ORE, WingsBlocks.AMETHYST_ORE);
-		OreDictionary.registerOre(FAIRY_DUST, WingsItems.FAIRY_DUST);
-		OreDictionary.registerOre(AMETHYST_GEM, WingsItems.AMETHYST);
-	}
-
-	public static boolean test(ItemStack stack, String name) {
-		return !stack.isEmpty() && ArrayUtils.contains(OreDictionary.getOreIDs(stack), OreDictionary.getOreID(name));
-	}
+    public static boolean test(ItemStack stack, String name)
+    {
+        return !stack.isEmpty() && ArrayUtils.contains(OreDictionary.getOreIDs(stack), OreDictionary.getOreID(name));
+    }
 }

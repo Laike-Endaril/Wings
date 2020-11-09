@@ -8,112 +8,134 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.function.Consumer;
 
-public interface Flight {
-	default void setIsFlying(boolean isFlying) {
-		setIsFlying(isFlying, PlayerSet.empty());
-	}
+public interface Flight
+{
+    default void setIsFlying(boolean isFlying)
+    {
+        setIsFlying(isFlying, PlayerSet.empty());
+    }
 
-	void setIsFlying(boolean isFlying, PlayerSet players);
+    void setIsFlying(boolean isFlying, PlayerSet players);
 
-	boolean isFlying();
+    boolean isFlying();
 
-	default void toggleIsFlying(PlayerSet players) {
-		setIsFlying(!isFlying(), players);
-	}
+    default void toggleIsFlying(PlayerSet players)
+    {
+        setIsFlying(!isFlying(), players);
+    }
 
-	void setTimeFlying(int timeFlying);
+    int getTimeFlying();
 
-	int getTimeFlying();
+    void setTimeFlying(int timeFlying);
 
-	float getFlyingAmount(float delta);
+    float getFlyingAmount(float delta);
 
-	void registerFlyingListener(FlyingListener listener);
+    void registerFlyingListener(FlyingListener listener);
 
-	void registerSyncListener(SyncListener listener);
+    void registerSyncListener(SyncListener listener);
 
-	boolean canFly(EntityPlayer player);
+    boolean canFly(EntityPlayer player);
 
-	boolean canLand(EntityPlayer player, ItemStack wings);
+    boolean canLand(EntityPlayer player, ItemStack wings);
 
-	void tick(EntityPlayer player, ItemStack wings);
+    void tick(EntityPlayer player, ItemStack wings);
 
-	void onFlown(EntityPlayer player, ItemStack wings, Vec3d direction);
+    void onFlown(EntityPlayer player, ItemStack wings, Vec3d direction);
 
-	void clone(Flight other);
+    void clone(Flight other);
 
-	void sync(PlayerSet players);
+    void sync(PlayerSet players);
 
-	void serialize(PacketBuffer buf);
+    void serialize(PacketBuffer buf);
 
-	void deserialize(PacketBuffer buf);
+    void deserialize(PacketBuffer buf);
 
-	interface FlyingListener {
-		void onChange(boolean isFlying);
+    interface FlyingListener
+    {
+        static Consumer<FlyingListener> onChangeUsing(boolean isFlying)
+        {
+            return l -> l.onChange(isFlying);
+        }
 
-		static Consumer<FlyingListener> onChangeUsing(boolean isFlying) {
-			return l -> l.onChange(isFlying);
-		}
-	}
+        void onChange(boolean isFlying);
+    }
 
-	interface SyncListener {
-		void onSync(PlayerSet players);
+    interface SyncListener
+    {
+        static Consumer<SyncListener> onSyncUsing(PlayerSet players)
+        {
+            return l -> l.onSync(players);
+        }
 
-		static Consumer<SyncListener> onSyncUsing(PlayerSet players) {
-			return l -> l.onSync(players);
-		}
-	}
+        void onSync(PlayerSet players);
+    }
 
-	interface PlayerSet {
-		void notify(Notifier notifier);
+    interface PlayerSet
+    {
+        static PlayerSet empty()
+        {
+            return n ->
+            {
+            };
+        }
 
-		static PlayerSet empty() {
-			return n -> {};
-		}
+        static PlayerSet ofSelf()
+        {
+            return Notifier::notifySelf;
+        }
 
-		static PlayerSet ofSelf() {
-			return Notifier::notifySelf;
-		}
+        static PlayerSet ofPlayer(EntityPlayerMP player)
+        {
+            return n -> n.notifyPlayer(player);
+        }
 
-		static PlayerSet ofPlayer(EntityPlayerMP player) {
-			return n -> n.notifyPlayer(player);
-		}
+        static PlayerSet ofOthers()
+        {
+            return Notifier::notifyOthers;
+        }
 
-		static PlayerSet ofOthers() {
-			return Notifier::notifyOthers;
-		}
+        static PlayerSet ofAll()
+        {
+            return n ->
+            {
+                n.notifySelf();
+                n.notifyOthers();
+            };
+        }
 
-		static PlayerSet ofAll() {
-			return n -> {
-				n.notifySelf();
-				n.notifyOthers();
-			};
-		}
-	}
+        void notify(Notifier notifier);
+    }
 
-	interface Notifier {
-		void notifySelf();
+    interface Notifier
+    {
+        static Notifier of(Runnable notifySelf, Consumer<EntityPlayerMP> notifyPlayer, Runnable notifyOthers)
+        {
+            return new Notifier()
+            {
+                @Override
+                public void notifySelf()
+                {
+                    notifySelf.run();
+                }
 
-		void notifyPlayer(EntityPlayerMP player);
+                @Override
+                public void notifyPlayer(EntityPlayerMP player)
+                {
+                    notifyPlayer.accept(player);
+                }
 
-		void notifyOthers();
+                @Override
+                public void notifyOthers()
+                {
+                    notifyOthers.run();
+                }
+            };
+        }
 
-		static Notifier of(Runnable notifySelf, Consumer<EntityPlayerMP> notifyPlayer, Runnable notifyOthers) {
-			return new Notifier() {
-				@Override
-				public void notifySelf() {
-					notifySelf.run();
-				}
+        void notifySelf();
 
-				@Override
-				public void notifyPlayer(EntityPlayerMP player) {
-					notifyPlayer.accept(player);
-				}
+        void notifyPlayer(EntityPlayerMP player);
 
-				@Override
-				public void notifyOthers() {
-					notifyOthers.run();
-				}
-			};
-		}
-	}
+        void notifyOthers();
+    }
 }

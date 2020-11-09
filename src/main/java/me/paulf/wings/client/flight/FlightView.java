@@ -7,16 +7,18 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.function.Consumer;
 
-public interface FlightView {
-	void ifFormPresent(Consumer<FormRenderer> consumer);
+public interface FlightView
+{
+    void ifFormPresent(Consumer<FormRenderer> consumer);
 
-	void tick(EntityPlayer player, ItemStack wings);
+    void tick(EntityPlayer player, ItemStack wings);
 
-	void tickEyeHeight(float value, float delta, FloatConsumer valueOut);
+    void tickEyeHeight(float value, float delta, FloatConsumer valueOut);
 
-	interface FormRenderer {
-		ResourceLocation getTexture();
+    interface FormRenderer
+    {
+        ResourceLocation getTexture();
 
-		void render(float delta, float scale);
-	}
+        void render(float delta, float scale);
+    }
 }

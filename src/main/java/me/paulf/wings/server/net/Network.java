@@ -15,38 +15,46 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-public final class Network implements IMessageHandler<Message, IMessage> {
-	private final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(WingsMod.ID);
+public final class Network implements IMessageHandler<Message, IMessage>
+{
+    private final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(WingsMod.ID);
 
-	public Network() {
-		register(MessageControlFlying.class, 0, Side.SERVER);
-		register(MessageSyncFlight.class, 1, Side.CLIENT);
-		register(MessageSetWingSettings.class, 2, Side.CLIENT);
-	}
+    public Network()
+    {
+        register(MessageControlFlying.class, 0, Side.SERVER);
+        register(MessageSyncFlight.class, 1, Side.CLIENT);
+        register(MessageSetWingSettings.class, 2, Side.CLIENT);
+    }
 
-	public void sendToServer(IMessage message) {
-		network.sendToServer(message);
-	}
+    public void sendToServer(IMessage message)
+    {
+        network.sendToServer(message);
+    }
 
-	public void sendToPlayer(IMessage message, EntityPlayerMP player) {
-		network.sendTo(message, player);
-	}
+    public void sendToPlayer(IMessage message, EntityPlayerMP player)
+    {
+        network.sendTo(message, player);
+    }
 
-	public void sendToAllTracking(IMessage message, Entity entity) {
-		network.sendToAllTracking(message, entity);
-	}
+    public void sendToAllTracking(IMessage message, Entity entity)
+    {
+        network.sendToAllTracking(message, entity);
+    }
 
-	@Override
-	public IMessage onMessage(Message message, MessageContext ctx) {
-		FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> message.process(ctx));
-		return null;
-	}
+    @Override
+    public IMessage onMessage(Message message, MessageContext ctx)
+    {
+        FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> message.process(ctx));
+        return null;
+    }
 
-	public Packet<?> createPacket(IMessage message) {
-		return network.getPacketFrom(message);
-	}
+    public Packet<?> createPacket(IMessage message)
+    {
+        return network.getPacketFrom(message);
+    }
 
-	private void register(Class<? extends Message> cls, int id, Side side) {
-		network.registerMessage(this, cls, id, side);
-	}
+    private void register(Class<? extends Message> cls, int id, Side side)
+    {
+        network.registerMessage(this, cls, id, side);
+    }
 }

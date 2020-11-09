@@ -14,61 +14,78 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public final class FlightApparatuses {
-	private FlightApparatuses() {}
+public final class FlightApparatuses
+{
+    private static final CapabilityHolder<ItemStack, FlightApparatus, WingedState> HOLDER = CapabilityHolder.create(WingedAbsentState::new, WingedPresentState::new);
 
-	private static final CapabilityHolder<ItemStack, FlightApparatus, WingedState> HOLDER = CapabilityHolder.create(WingedAbsentState::new, WingedPresentState::new);
+    private FlightApparatuses()
+    {
+    }
 
-	public static boolean has(ItemStack stack) {
-		return HOLDER.state().has(stack, null);
-	}
+    public static boolean has(ItemStack stack)
+    {
+        return HOLDER.state().has(stack, null);
+    }
 
-	@Nullable
-	public static FlightApparatus get(ItemStack stack) {
-		return HOLDER.state().get(stack, null);
-	}
+    @Nullable
+    public static FlightApparatus get(ItemStack stack)
+    {
+        return HOLDER.state().get(stack, null);
+    }
 
-	public static <T extends FlightApparatus> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(T instance) {
-		return HOLDER.state().providerBuilder(instance);
-	}
+    public static <T extends FlightApparatus> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(T instance)
+    {
+        return HOLDER.state().providerBuilder(instance);
+    }
 
-	public static ItemStack find(EntityPlayer player) {
-		return HOLDER.state().find(player);
-	}
+    public static ItemStack find(EntityPlayer player)
+    {
+        return HOLDER.state().find(player);
+    }
 
-	@CapabilityInject(FlightApparatus.class)
-	static void inject(Capability<FlightApparatus> capability) {
-		HOLDER.inject(capability);
-	}
+    @CapabilityInject(FlightApparatus.class)
+    static void inject(Capability<FlightApparatus> capability)
+    {
+        HOLDER.inject(capability);
+    }
 
-	private interface WingedState extends CapabilityHolder.State<ItemStack, FlightApparatus> {
-		ItemStack find(EntityPlayer player);
-	}
+    private interface WingedState extends CapabilityHolder.State<ItemStack, FlightApparatus>
+    {
+        ItemStack find(EntityPlayer player);
+    }
 
-	private static final class WingedAbsentState extends CapabilityHolder.AbsentState<ItemStack, FlightApparatus> implements WingedState {
-		@Override
-		public ItemStack find(EntityPlayer player) {
-			return ItemStack.EMPTY;
-		}
-	}
+    private static final class WingedAbsentState extends CapabilityHolder.AbsentState<ItemStack, FlightApparatus> implements WingedState
+    {
+        @Override
+        public ItemStack find(EntityPlayer player)
+        {
+            return ItemStack.EMPTY;
+        }
+    }
 
-	private static final class WingedPresentState extends CapabilityHolder.PresentState<ItemStack, FlightApparatus> implements WingedState {
-		private WingedPresentState(Capability<FlightApparatus> capability) {
-			super(capability);
-		}
+    private static final class WingedPresentState extends CapabilityHolder.PresentState<ItemStack, FlightApparatus> implements WingedState
+    {
+        private WingedPresentState(Capability<FlightApparatus> capability)
+        {
+            super(capability);
+        }
 
-		@Override
-		public ItemStack find(EntityPlayer player) {
-			for (HandlerSlot slot : WingsMod.instance().getWingsAccessor().enumerate(player)) {
-				ItemStack stack = slot.get();
-				if (has(stack, null)) {
-					return stack;
-				}
-				if (!stack.isEmpty() && Arrays.asList(WingsConfig.wearObstructions).contains(Util.getName(stack.getItem()).toString())) {
-					break;
-				}
-			}
-			return ItemStack.EMPTY;
-		}
-	}
+        @Override
+        public ItemStack find(EntityPlayer player)
+        {
+            for (HandlerSlot slot : WingsMod.instance().getWingsAccessor().enumerate(player))
+            {
+                ItemStack stack = slot.get();
+                if (has(stack, null))
+                {
+                    return stack;
+                }
+                if (!stack.isEmpty() && Arrays.asList(WingsConfig.wearObstructions).contains(Util.getName(stack.getItem()).toString()))
+                {
+                    break;
+                }
+            }
+            return ItemStack.EMPTY;
+        }
+    }
 }

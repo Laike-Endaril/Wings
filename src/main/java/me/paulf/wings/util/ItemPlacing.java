@@ -9,22 +9,27 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public interface ItemPlacing<T extends ICapabilityProvider> {
-	IItemHandler getStorage(T provider);
+public interface ItemPlacing<T extends ICapabilityProvider>
+{
+    static <T extends EntityLivingBase> ItemPlacing<T> forArmor(EntityEquipmentSlot slot)
+    {
+        return new ItemPlacing<T>()
+        {
+            @Override
+            public IItemHandler getStorage(T provider)
+            {
+                return provider.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
+            }
 
-	IntList getSlots();
+            @Override
+            public IntList getSlots()
+            {
+                return IntLists.singleton(slot.getIndex());
+            }
+        };
+    }
 
-	static <T extends EntityLivingBase> ItemPlacing<T> forArmor(EntityEquipmentSlot slot) {
-		return new ItemPlacing<T>() {
-			@Override
-			public IItemHandler getStorage(T provider) {
-				return provider.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
-			}
+    IItemHandler getStorage(T provider);
 
-			@Override
-			public IntList getSlots() {
-				return IntLists.singleton(slot.getIndex());
-			}
-		};
-	}
+    IntList getSlots();
 }

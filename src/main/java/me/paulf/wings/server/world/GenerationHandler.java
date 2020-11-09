@@ -18,34 +18,38 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
-public final class GenerationHandler {
-	private GenerationHandler() {}
+public final class GenerationHandler
+{
+    private static final WorldGenerator FAIRY_DUST_ORE_GENERATOR = newVeinFeature(
+            WingsOreConfig.FAIRY_DUST,
+            WingsBlocks.FAIRY_DUST_ORE::getDefaultState
+    );
+    private static final WorldGenerator AMETHYST_ORE_GENERATOR = newVeinFeature(
+            WingsOreConfig.AMETHYST,
+            WingsBlocks.AMETHYST_ORE::getDefaultState
+    );
 
-	private static final WorldGenerator FAIRY_DUST_ORE_GENERATOR = newVeinFeature(
-		WingsOreConfig.FAIRY_DUST,
-		WingsBlocks.FAIRY_DUST_ORE::getDefaultState
-	);
+    private GenerationHandler()
+    {
+    }
 
-	private static final WorldGenerator AMETHYST_ORE_GENERATOR = newVeinFeature(
-		WingsOreConfig.AMETHYST,
-		WingsBlocks.AMETHYST_ORE::getDefaultState
-	);
+    @SubscribeEvent
+    public static void onDecorateBiome(DecorateBiomeEvent.Pre event)
+    {
+        World world = event.getWorld();
+        Random rng = event.getRand();
+        BlockPos pos = event.getChunkPos().getBlock(8, 0, 8);
+        FAIRY_DUST_ORE_GENERATOR.generate(world, rng, pos);
+        AMETHYST_ORE_GENERATOR.generate(world, rng, pos);
+    }
 
-	@SubscribeEvent
-	public static void onDecorateBiome(DecorateBiomeEvent.Pre event) {
-		World world = event.getWorld();
-		Random rng = event.getRand();
-		BlockPos pos = event.getChunkPos().getBlock(8, 0, 8);
-		FAIRY_DUST_ORE_GENERATOR.generate(world, rng, pos);
-		AMETHYST_ORE_GENERATOR.generate(world, rng, pos);
-	}
-
-	private static WorldGenerator newVeinFeature(VeinSettings settings, Supplier<IBlockState> block) {
-		return new FeatureRange(
-			new FeatureVein(block, settings.getSize()),
-			settings.getCount(),
-			settings.getMinHeight(),
-			settings.getMaxHeight()
-		);
-	}
+    private static WorldGenerator newVeinFeature(VeinSettings settings, Supplier<IBlockState> block)
+    {
+        return new FeatureRange(
+                new FeatureVein(block, settings.getSize()),
+                settings.getCount(),
+                settings.getMinHeight(),
+                settings.getMaxHeight()
+        );
+    }
 }

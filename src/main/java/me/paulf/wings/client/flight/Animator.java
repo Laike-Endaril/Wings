@@ -1,15 +1,16 @@
 package me.paulf.wings.client.flight;
 
-public interface Animator {
-	void beginLand();
+public interface Animator
+{
+    void beginLand();
 
-	void beginGlide();
+    void beginGlide();
 
-	void beginIdle();
+    void beginIdle();
 
-	void beginLift();
+    void beginLift();
 
-	void beginFall();
+    void beginFall();
 
-	void update();
+    void update();
 }

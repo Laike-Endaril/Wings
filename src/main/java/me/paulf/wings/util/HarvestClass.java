@@ -1,17 +1,20 @@
 package me.paulf.wings.util;
 
-public enum HarvestClass {
-	PICKAXE("pickaxe"),
-	AXE("axe"),
-	SHOVEL("shovel");
+public enum HarvestClass
+{
+    PICKAXE("pickaxe"),
+    AXE("axe"),
+    SHOVEL("shovel");
 
-	private final String name;
+    private final String name;
 
-	HarvestClass(String name) {
-		this.name = name;
-	}
+    HarvestClass(String name)
+    {
+        this.name = name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName()
+    {
+        return name;
+    }
 }

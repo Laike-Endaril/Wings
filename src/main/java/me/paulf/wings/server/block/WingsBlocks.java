@@ -14,24 +14,27 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @GameRegistry.ObjectHolder(WingsMod.ID)
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
-public final class WingsBlocks {
-	private WingsBlocks() {}
+public final class WingsBlocks
+{
+    public static final Block FAIRY_DUST_ORE = Blocks.AIR;
+    public static final Block AMETHYST_ORE = Blocks.AIR;
 
-	public static final Block FAIRY_DUST_ORE = Blocks.AIR;
+    private WingsBlocks()
+    {
+    }
 
-	public static final Block AMETHYST_ORE = Blocks.AIR;
-
-	@SubscribeEvent
-	public static void register(RegistryEvent.Register<Block> event) {
-		event.getRegistry().registerAll(
-			Reg.withName(BlockWingsOre.create(() -> WingsItems.FAIRY_DUST, 0, 2, HarvestLevel.STONE)
-				.setCreativeTab(ItemGroupWings.instance()),
-				"fairy_dust_ore"
-			),
-			Reg.withName(BlockWingsOre.create(() -> WingsItems.AMETHYST, 3, 7, HarvestLevel.IRON)
-				.setCreativeTab(ItemGroupWings.instance()),
-				"amethyst_ore"
-			)
-		);
-	}
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<Block> event)
+    {
+        event.getRegistry().registerAll(
+                Reg.withName(BlockWingsOre.create(() -> WingsItems.FAIRY_DUST, 0, 2, HarvestLevel.STONE)
+                                .setCreativeTab(ItemGroupWings.instance()),
+                        "fairy_dust_ore"
+                ),
+                Reg.withName(BlockWingsOre.create(() -> WingsItems.AMETHYST, 3, 7, HarvestLevel.IRON)
+                                .setCreativeTab(ItemGroupWings.instance()),
+                        "amethyst_ore"
+                )
+        );
+    }
 }

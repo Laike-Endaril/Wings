@@ -12,151 +12,192 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.function.BiFunction;
 
-public final class Access {
-	private Access() {}
+public final class Access
+{
+    private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
-	private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private Access()
+    {
+    }
 
-	public static <T> NamingVirtualHandleBuilder<T> virtual(Class<T> refc) {
-		return new NamingVirtualHandleBuilder<>(refc);
-	}
+    public static <T> NamingVirtualHandleBuilder<T> virtual(Class<T> refc)
+    {
+        return new NamingVirtualHandleBuilder<>(refc);
+    }
 
-	public static <T> NamingGetterHandleBuilder<T> getter(Class<T> refc) {
-		return new NamingGetterHandleBuilder<>(refc);
-	}
+    public static <T> NamingGetterHandleBuilder<T> getter(Class<T> refc)
+    {
+        return new NamingGetterHandleBuilder<>(refc);
+    }
 
-	private static abstract class NamingBuilder<T, F> {
-		private final BiFunction<Class<T>, ObjectArrayList<String>, F> factory;
+    public static <T extends Throwable> RuntimeException rethrow(Throwable t) throws T
+    {
+        //noinspection unchecked
+        throw (T) t;
+    }
 
-		private final Class<T> refc;
+    private static abstract class NamingBuilder<T, F>
+    {
+        private final BiFunction<Class<T>, ObjectArrayList<String>, F> factory;
 
-		private NamingBuilder(BiFunction<Class<T>, ObjectArrayList<String>, F> factory, Class<T> refc) {
-			this.factory = factory;
-			this.refc = refc;
-		}
+        private final Class<T> refc;
 
-		F name(String name, String... others) {
-			ObjectArrayList<String> names = ObjectArrayList.wrap(new String[others.length + 1], 0);
-			names.add(name);
-			names.addElements(names.size(), others);
-			return this.factory.apply(this.refc, names);
-		}
-	}
+        private NamingBuilder(BiFunction<Class<T>, ObjectArrayList<String>, F> factory, Class<T> refc)
+        {
+            this.factory = factory;
+            this.refc = refc;
+        }
 
-	private static abstract class HandleBuilder<T> {
-		final Class<T> refc;
+        F name(String name, String... others)
+        {
+            ObjectArrayList<String> names = ObjectArrayList.wrap(new String[others.length + 1], 0);
+            names.add(name);
+            names.addElements(names.size(), others);
+            return this.factory.apply(this.refc, names);
+        }
+    }
 
-		final ObjectArrayList<String> names;
+    private static abstract class HandleBuilder<T>
+    {
+        final Class<T> refc;
 
-		private HandleBuilder(Class<T> refc, ObjectArrayList<String> names) {
-			this.refc = refc;
-			this.names = names;
-		}
-	}
+        final ObjectArrayList<String> names;
 
-	public static final class NamingVirtualHandleBuilder<T> extends NamingBuilder<T, VirtualHandleBuilder<T>> {
-		private NamingVirtualHandleBuilder(Class<T> refc) {
-			super(VirtualHandleBuilder::new, refc);
-		}
+        private HandleBuilder(Class<T> refc, ObjectArrayList<String> names)
+        {
+            this.refc = refc;
+            this.names = names;
+        }
+    }
 
-		@Override
-		public VirtualHandleBuilder<T> name(String name, String... others) {
-			return super.name(name, others);
-		}
-	}
+    public static final class NamingVirtualHandleBuilder<T> extends NamingBuilder<T, VirtualHandleBuilder<T>>
+    {
+        private NamingVirtualHandleBuilder(Class<T> refc)
+        {
+            super(VirtualHandleBuilder::new, refc);
+        }
 
-	public static final class VirtualHandleBuilder<T> extends HandleBuilder<T> {
-		private final ObjectArrayList<Class<?>> ptypes;
+        @Override
+        public VirtualHandleBuilder<T> name(String name, String... others)
+        {
+            return super.name(name, others);
+        }
+    }
 
-		private VirtualHandleBuilder(Class<T> refc, ObjectArrayList<String> names) {
-			super(refc, names);
-			this.ptypes = new ObjectArrayList<Class<?>>(new Class<?>[4], false) {
-				// create a trim that preserves type
-				@Override
-				public void trim() {
-					this.a = ObjectArrays.trim(this.a, this.size);
-				}
-			};
-		}
+    public static final class VirtualHandleBuilder<T> extends HandleBuilder<T>
+    {
+        private final ObjectArrayList<Class<?>> ptypes;
 
-		public VirtualHandleBuilder<T> ptype(Class<?> ptype) {
-			this.ptypes.add(ptype);
-			return this;
-		}
+        private VirtualHandleBuilder(Class<T> refc, ObjectArrayList<String> names)
+        {
+            super(refc, names);
+            this.ptypes = new ObjectArrayList<Class<?>>(new Class<?>[4], false)
+            {
+                // create a trim that preserves type
+                @Override
+                public void trim()
+                {
+                    this.a = ObjectArrays.trim(this.a, this.size);
+                }
+            };
+        }
 
-		public VirtualHandleBuilder<T> ptypes(Class<?>... ptypes) {
-			this.ptypes.addElements(this.ptypes.size(), ptypes);
-			return this;
-		}
+        private static MethodHandle find(Class<?> refc, ObjectArrayList<String> names, MethodType type)
+        {
+            Class<?>[] parameterTypes = type.parameterArray();
+            for (ObjectListIterator<String> it = names.iterator(); ; )
+            {
+                String name = it.next();
+                // TODO: verbose exception message
+                try
+                {
+                    Method m = refc.getDeclaredMethod(name, parameterTypes);
+                    m.setAccessible(true);
+                    if (m.getReturnType() != type.returnType())
+                    {
+                        throw new NoSuchMethodException();
+                    }
+                    return LOOKUP.unreflect(m);
+                }
+                catch (NoSuchMethodException | IllegalAccessException e)
+                {
+                    if (!it.hasNext())
+                    {
+                        throw new ReflectionHelper.UnableToFindMethodException(names.elements(), e);
+                    }
+                }
+            }
+        }
 
-		public <R> MethodHandle rtype(Class<R> rtype) {
-			this.ptypes.trim();
-			return find(this.refc, this.names, MethodType.methodType(rtype, this.ptypes.elements()));
-		}
+        public VirtualHandleBuilder<T> ptype(Class<?> ptype)
+        {
+            this.ptypes.add(ptype);
+            return this;
+        }
 
-		private static MethodHandle find(Class<?> refc, ObjectArrayList<String> names, MethodType type) {
-			Class<?>[] parameterTypes = type.parameterArray();
-			for (ObjectListIterator<String> it = names.iterator(); ; ) {
-				String name = it.next();
-				// TODO: verbose exception message
-				try {
-					Method m = refc.getDeclaredMethod(name, parameterTypes);
-					m.setAccessible(true);
-					if (m.getReturnType() != type.returnType()) {
-						throw new NoSuchMethodException();
-					}
-					return LOOKUP.unreflect(m);
-				} catch (NoSuchMethodException | IllegalAccessException e) {
-					if (!it.hasNext()) {
-						throw new ReflectionHelper.UnableToFindMethodException(names.elements(), e);
-					}
-				}
-			}
-		}
-	}
+        public VirtualHandleBuilder<T> ptypes(Class<?>... ptypes)
+        {
+            this.ptypes.addElements(this.ptypes.size(), ptypes);
+            return this;
+        }
 
-	public static final class NamingGetterHandleBuilder<T> extends NamingBuilder<T, GetterHandleBuilder<T>> {
-		private NamingGetterHandleBuilder(Class<T> refc) {
-			super(GetterHandleBuilder::new, refc);
-		}
+        public <R> MethodHandle rtype(Class<R> rtype)
+        {
+            this.ptypes.trim();
+            return find(this.refc, this.names, MethodType.methodType(rtype, this.ptypes.elements()));
+        }
+    }
 
-		@Override
-		public GetterHandleBuilder<T> name(String name, String... others) {
-			return super.name(name, others);
-		}
-	}
+    public static final class NamingGetterHandleBuilder<T> extends NamingBuilder<T, GetterHandleBuilder<T>>
+    {
+        private NamingGetterHandleBuilder(Class<T> refc)
+        {
+            super(GetterHandleBuilder::new, refc);
+        }
 
-	public static final class GetterHandleBuilder<T> extends HandleBuilder<T> {
-		private GetterHandleBuilder(Class<T> refc, ObjectArrayList<String> names) {
-			super(refc, names);
-		}
+        @Override
+        public GetterHandleBuilder<T> name(String name, String... others)
+        {
+            return super.name(name, others);
+        }
+    }
 
-		public <R> MethodHandle type(Class<R> type) {
-			return find(this.refc, this.names, MethodType.methodType(type, this.refc));
-		}
+    public static final class GetterHandleBuilder<T> extends HandleBuilder<T>
+    {
+        private GetterHandleBuilder(Class<T> refc, ObjectArrayList<String> names)
+        {
+            super(refc, names);
+        }
 
-		private static MethodHandle find(Class<?> refc, ObjectArrayList<String> names, MethodType type) {
-			for (ObjectListIterator<String> it = names.iterator(); ; ) {
-				String name = it.next();
-				// TODO: verbose exception message
-				try {
-					Field f = refc.getDeclaredField(name);
-					f.setAccessible(true);
-					if (f.getType() != type.returnType()) {
-						throw new NoSuchFieldException();
-					}
-					return LOOKUP.unreflectGetter(f);
-				} catch (NoSuchFieldException | IllegalAccessException e) {
-					if (!it.hasNext()) {
-						throw new ReflectionHelper.UnableToFindFieldException(names.elements(), e);
-					}
-				}
-			}
-		}
-	}
+        private static MethodHandle find(Class<?> refc, ObjectArrayList<String> names, MethodType type)
+        {
+            for (ObjectListIterator<String> it = names.iterator(); ; )
+            {
+                String name = it.next();
+                // TODO: verbose exception message
+                try
+                {
+                    Field f = refc.getDeclaredField(name);
+                    f.setAccessible(true);
+                    if (f.getType() != type.returnType())
+                    {
+                        throw new NoSuchFieldException();
+                    }
+                    return LOOKUP.unreflectGetter(f);
+                }
+                catch (NoSuchFieldException | IllegalAccessException e)
+                {
+                    if (!it.hasNext())
+                    {
+                        throw new ReflectionHelper.UnableToFindFieldException(names.elements(), e);
+                    }
+                }
+            }
+        }
 
-	public static <T extends Throwable> RuntimeException rethrow(Throwable t) throws T {
-		//noinspection unchecked
-		throw (T) t;
-	}
+        public <R> MethodHandle type(Class<R> type)
+        {
+            return find(this.refc, this.names, MethodType.methodType(type, this.refc));
+        }
+    }
 }

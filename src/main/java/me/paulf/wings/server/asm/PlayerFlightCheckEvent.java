@@ -5,8 +5,10 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 @Event.HasResult
-public class PlayerFlightCheckEvent extends PlayerEvent {
-	public PlayerFlightCheckEvent(EntityPlayer player) {
-		super(player);
-	}
+public class PlayerFlightCheckEvent extends PlayerEvent
+{
+    public PlayerFlightCheckEvent(EntityPlayer player)
+    {
+        super(player);
+    }
 }

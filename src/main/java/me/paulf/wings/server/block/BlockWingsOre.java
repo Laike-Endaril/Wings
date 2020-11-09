@@ -15,40 +15,46 @@ import net.minecraft.world.World;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public final class BlockWingsOre extends Block {
-	private final Supplier<Item> drop;
+public final class BlockWingsOre extends Block
+{
+    private final Supplier<Item> drop;
 
-	private final int minExp;
+    private final int minExp;
 
-	private final int maxExp;
+    private final int maxExp;
 
-	private BlockWingsOre(Supplier<Item> drop, int minExp, int maxExp) {
-		super(Material.ROCK);
-		this.drop = drop;
-		this.minExp = minExp;
-		this.maxExp = maxExp;
-	}
+    private BlockWingsOre(Supplier<Item> drop, int minExp, int maxExp)
+    {
+        super(Material.ROCK);
+        this.drop = drop;
+        this.minExp = minExp;
+        this.maxExp = maxExp;
+    }
 
-	@Override
-	public int quantityDroppedWithBonus(int fortune, Random rng) {
-		return fortune > 0 ? quantityDropped(rng) * Math.max(rng.nextInt(fortune + 2), 1) : quantityDropped(rng);
-	}
+    public static BlockWingsOre create(Supplier<Item> drop, int minExp, int maxExp, HarvestLevel harvestLevel)
+    {
+        BlockWingsOre block = new BlockWingsOre(drop, minExp, maxExp);
+        block.setHardness(3.0F);
+        block.setResistance(5.0F);
+        Util.setHarvestLevel(block, HarvestClass.PICKAXE, harvestLevel);
+        return block;
+    }
 
-	@Override
-	public Item getItemDropped(IBlockState state, Random rng, int fortune) {
-		return drop.get();
-	}
+    @Override
+    public int quantityDroppedWithBonus(int fortune, Random rng)
+    {
+        return fortune > 0 ? quantityDropped(rng) * Math.max(rng.nextInt(fortune + 2), 1) : quantityDropped(rng);
+    }
 
-	@Override
-	public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
-		return MathHelper.getInt(world instanceof World ? ((World) world).rand : new Random(), minExp, maxExp);
-	}
+    @Override
+    public Item getItemDropped(IBlockState state, Random rng, int fortune)
+    {
+        return drop.get();
+    }
 
-	public static BlockWingsOre create(Supplier<Item> drop, int minExp, int maxExp, HarvestLevel harvestLevel) {
-		BlockWingsOre block = new BlockWingsOre(drop, minExp, maxExp);
-		block.setHardness(3.0F);
-		block.setResistance(5.0F);
-		Util.setHarvestLevel(block, HarvestClass.PICKAXE, harvestLevel);
-		return block;
-	}
+    @Override
+    public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune)
+    {
+        return MathHelper.getInt(world instanceof World ? ((World) world).rand : new Random(), minExp, maxExp);
+    }
 }

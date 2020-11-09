@@ -9,18 +9,20 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
-public final class WingsMoBendsRuntimePatcher extends RuntimePatcher {
-	@Override
-	public void onInit() {
-		ClassPatchers.patchMethod(patchClass(ModelBendsPlayer.class), ModelPlayer.class, "setRotationAngles", 6, float.class, Entity.class, void.class)
-			.apply(Patch.AFTER, new InsnPredicate.Method(EntityLivingBase.class, "isElytraFlying", boolean.class), m -> m
-				.var(ALOAD, 7)
-				.cast(EntityPlayer.class)
-				.node(SWAP)
-				.method(INVOKESTATIC, WingsMoBendsHooks.class, "onTestPlayerAnimation", EntityPlayer.class, boolean.class, boolean.class)
-			)
-			.apply(Patch.REPLACE_NODE, new InsnPredicate.Ldc().cst("elytra"), m -> m
-				.method(INVOKESTATIC, WingsMoBendsHooks.class, "getPlayerAnimation", String.class)
-			);
-	}
+public final class WingsMoBendsRuntimePatcher extends RuntimePatcher
+{
+    @Override
+    public void onInit()
+    {
+        ClassPatchers.patchMethod(patchClass(ModelBendsPlayer.class), ModelPlayer.class, "setRotationAngles", 6, float.class, Entity.class, void.class)
+                .apply(Patch.AFTER, new InsnPredicate.Method(EntityLivingBase.class, "isElytraFlying", boolean.class), m -> m
+                        .var(ALOAD, 7)
+                        .cast(EntityPlayer.class)
+                        .node(SWAP)
+                        .method(INVOKESTATIC, WingsMoBendsHooks.class, "onTestPlayerAnimation", EntityPlayer.class, boolean.class, boolean.class)
+                )
+                .apply(Patch.REPLACE_NODE, new InsnPredicate.Ldc().cst("elytra"), m -> m
+                        .method(INVOKESTATIC, WingsMoBendsHooks.class, "getPlayerAnimation", String.class)
+                );
+    }
 }

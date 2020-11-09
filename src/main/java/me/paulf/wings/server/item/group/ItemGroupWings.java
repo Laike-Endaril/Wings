@@ -5,21 +5,26 @@ import me.paulf.wings.server.item.WingsItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 
-public final class ItemGroupWings extends CreativeTabs {
-	private static final class Holder {
-		private static final ItemGroupWings INSTANCE = new ItemGroupWings();	
-	}
+public final class ItemGroupWings extends CreativeTabs
+{
+    private ItemGroupWings()
+    {
+        super(WingsMod.ID);
+    }
 
-	private ItemGroupWings() {
-		super(WingsMod.ID);
-	}
+    public static ItemGroupWings instance()
+    {
+        return Holder.INSTANCE;
+    }
 
-	@Override
-	public ItemStack createIcon() {
-		return new ItemStack(WingsItems.ANGEL_WINGS);
-	}
+    @Override
+    public ItemStack createIcon()
+    {
+        return new ItemStack(WingsItems.ANGEL_WINGS);
+    }
 
-	public static ItemGroupWings instance() {
-		return Holder.INSTANCE;
-	}
+    private static final class Holder
+    {
+        private static final ItemGroupWings INSTANCE = new ItemGroupWings();
+    }
 }
