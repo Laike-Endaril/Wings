@@ -12,6 +12,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -140,11 +142,15 @@ public final class FlightDefault implements Flight
                 float vxz = -MathHelper.cos(pitch);
 
                 World world = player.world;
-                double rainModifier = world.isRainingAt(player.getPosition()) ? 1 - player.world.rainingStrength * 0.3 : 1;
+                BlockPos pos = player.getPosition();
+                AxisAlignedBB box = player.getEntityBoundingBox();
+                double collisionModifier = world.checkBlockCollision(box.grow(1, .1, 1)) ? 0 : 1;
+                double rainModifier = world.isRainingAt(pos) ? 1 - player.world.rainingStrength * 0.3 : 1;
+                double combinedModifier = collisionModifier * rainModifier;
 
-                player.motionX += rainModifier * MathHelper.sin(yaw) * vxz * speed;
-                player.motionY += rainModifier * MathHelper.sin(pitch) * speed + Y_BOOST * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D);
-                player.motionZ += rainModifier * MathHelper.cos(yaw) * vxz * speed;
+                player.motionX += combinedModifier * MathHelper.sin(yaw) * vxz * speed;
+                player.motionY += combinedModifier * (MathHelper.sin(pitch) * speed + Y_BOOST * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D));
+                player.motionZ += combinedModifier * MathHelper.cos(yaw) * vxz * speed;
             }
             if (canLand(player, wings))
             {
