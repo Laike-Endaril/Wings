@@ -1,7 +1,7 @@
 package me.paulf.wings.server.apparatus;
 
 import me.paulf.wings.WingsMod;
-import me.paulf.wings.server.config.WingsConfig;
+import me.paulf.wings.config.WingsConfig;
 import me.paulf.wings.util.CapabilityHolder;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.HandlerSlot;
@@ -80,7 +80,7 @@ public final class FlightApparatuses
                 {
                     return stack;
                 }
-                if (!stack.isEmpty() && Arrays.asList(WingsConfig.wearObstructions).contains(Util.getName(stack.getItem()).toString()))
+                if (!stack.isEmpty() && Arrays.asList(WingsConfig.serverSettings.wearObstructions).contains(Util.getName(stack.getItem()).toString()))
                 {
                     break;
                 }

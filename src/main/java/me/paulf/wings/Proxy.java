@@ -2,7 +2,6 @@ package me.paulf.wings;
 
 import me.paulf.wings.server.apparatus.FlightApparatus;
 import me.paulf.wings.server.apparatus.SimpleFlightApparatus;
-import me.paulf.wings.server.config.WingsItemsConfig;
 import me.paulf.wings.server.dreamcatcher.InSomniable;
 import me.paulf.wings.server.dreamcatcher.Playable;
 import me.paulf.wings.server.fix.WingsFixes;
@@ -14,7 +13,6 @@ import me.paulf.wings.server.net.clientbound.MessageSetWingSettings;
 import me.paulf.wings.server.net.clientbound.MessageSyncFlight;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.ItemAccessor;
-import me.paulf.wings.util.ModConfigSaver;
 import me.paulf.wings.util.SimpleStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -44,10 +42,9 @@ public abstract class Proxy
             @SubscribeEvent
             public void onClientConnectedEvent(FMLNetworkEvent.ServerConnectionFromClientEvent event)
             {
-                ((NetHandlerPlayServer) event.getHandler()).sendPacket(network.createPacket(new MessageSetWingSettings(WingsItemsConfig.createWingAttributes())));
+                ((NetHandlerPlayServer) event.getHandler()).sendPacket(network.createPacket(new MessageSetWingSettings()));
             }
         });
-        MinecraftForge.EVENT_BUS.register(ModConfigSaver.create(WingsMod.MODID));
     }
 
     protected void init()

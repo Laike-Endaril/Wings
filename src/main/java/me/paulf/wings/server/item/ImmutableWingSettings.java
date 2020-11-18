@@ -1,7 +1,11 @@
 package me.paulf.wings.server.item;
 
+import net.minecraft.util.ResourceLocation;
+
 public final class ImmutableWingSettings implements WingSettings
 {
+    private final ResourceLocation resourceLocation;
+
     private final int requiredFlightSatiation;
 
     private final float flyingExertion;
@@ -12,8 +16,9 @@ public final class ImmutableWingSettings implements WingSettings
 
     private final int itemDurability;
 
-    private ImmutableWingSettings(int requiredFlightSatiation, float flyingExertion, int requiredLandSatiation, float landingExertion, int itemDurability)
+    private ImmutableWingSettings(ResourceLocation resourceLocation, int requiredFlightSatiation, float flyingExertion, int requiredLandSatiation, float landingExertion, int itemDurability)
     {
+        this.resourceLocation = resourceLocation;
         this.requiredFlightSatiation = requiredFlightSatiation;
         this.flyingExertion = flyingExertion;
         this.requiredLandSatiation = requiredLandSatiation;
@@ -21,9 +26,15 @@ public final class ImmutableWingSettings implements WingSettings
         this.itemDurability = itemDurability;
     }
 
-    public static ImmutableWingSettings of(int requiredFlightSatiation, float flyingExertion, int requiredLandSatiation, float landingExertion, int durability)
+    public static ImmutableWingSettings of(ResourceLocation resourceLocation, int requiredFlightSatiation, float flyingExertion, int requiredLandSatiation, float landingExertion, int durability)
     {
-        return new ImmutableWingSettings(requiredFlightSatiation, flyingExertion, requiredLandSatiation, landingExertion, durability);
+        return new ImmutableWingSettings(resourceLocation, requiredFlightSatiation, flyingExertion, requiredLandSatiation, landingExertion, durability);
+    }
+
+    @Override
+    public ResourceLocation getResourceLocation()
+    {
+        return resourceLocation;
     }
 
     @Override

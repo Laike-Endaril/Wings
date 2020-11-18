@@ -1,9 +1,9 @@
 package me.paulf.wings.server.world;
 
 import me.paulf.wings.WingsMod;
+import me.paulf.wings.config.WingsConfig;
+import me.paulf.wings.config.server.VeinSettings;
 import me.paulf.wings.server.block.WingsBlocks;
-import me.paulf.wings.server.config.VeinSettings;
-import me.paulf.wings.server.config.WingsOreConfig;
 import me.paulf.wings.server.world.feature.FeatureRange;
 import me.paulf.wings.server.world.feature.FeatureVein;
 import net.minecraft.block.state.IBlockState;
@@ -20,18 +20,8 @@ import java.util.function.Supplier;
 @Mod.EventBusSubscriber(modid = WingsMod.MODID)
 public final class GenerationHandler
 {
-    private static final WorldGenerator FAIRY_DUST_ORE_GENERATOR = newVeinFeature(
-            WingsOreConfig.FAIRY_DUST,
-            WingsBlocks.FAIRY_DUST_ORE::getDefaultState
-    );
-    private static final WorldGenerator AMETHYST_ORE_GENERATOR = newVeinFeature(
-            WingsOreConfig.AMETHYST,
-            WingsBlocks.AMETHYST_ORE::getDefaultState
-    );
-
-    private GenerationHandler()
-    {
-    }
+    private static final WorldGenerator FAIRY_DUST_ORE_GENERATOR = newVeinFeature(WingsConfig.serverSettings.ores.fairyDustOreGen, WingsBlocks.FAIRY_DUST_ORE::getDefaultState);
+    private static final WorldGenerator AMETHYST_ORE_GENERATOR = newVeinFeature(WingsConfig.serverSettings.ores.amethystOreGen, WingsBlocks.AMETHYST_ORE::getDefaultState);
 
     @SubscribeEvent
     public static void onDecorateBiome(DecorateBiomeEvent.Pre event)
@@ -45,11 +35,6 @@ public final class GenerationHandler
 
     private static WorldGenerator newVeinFeature(VeinSettings settings, Supplier<IBlockState> block)
     {
-        return new FeatureRange(
-                new FeatureVein(block, settings.getSize()),
-                settings.getCount(),
-                settings.getMinHeight(),
-                settings.getMaxHeight()
-        );
+        return new FeatureRange(new FeatureVein(block, settings.veinSize), settings.veinCount, settings.veinMinHeight, settings.veinMaxHeight);
     }
 }

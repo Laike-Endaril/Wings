@@ -1,79 +1,66 @@
 package me.paulf.wings.server.net.clientbound;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import me.paulf.wings.config.WingsConfig;
 import me.paulf.wings.server.item.ImmutableWingSettings;
 import me.paulf.wings.server.item.ItemWings;
 import me.paulf.wings.server.item.WingSettings;
 import me.paulf.wings.server.net.Message;
 import net.minecraft.item.Item;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 public final class MessageSetWingSettings extends Message
 {
-    private ImmutableMap<ResourceLocation, WingSettings> settings;
+    public ArrayList<WingSettings> wingSettings = new ArrayList<>();
 
     public MessageSetWingSettings()
     {
-    }
-
-    public MessageSetWingSettings(ImmutableMap<ResourceLocation, WingSettings> settings)
-    {
-        this.settings = settings;
+        wingSettings.add(WingsConfig.serverSettings.items.blueButterflyWings);
+        wingSettings.add(WingsConfig.serverSettings.items.monarchWings);
+        wingSettings.add(WingsConfig.serverSettings.items.fairyWings);
+        wingSettings.add(WingsConfig.serverSettings.items.batWings);
+        wingSettings.add(WingsConfig.serverSettings.items.dragonWings);
+        wingSettings.add(WingsConfig.serverSettings.items.slimeWings);
+        wingSettings.add(WingsConfig.serverSettings.items.fireWings);
+        wingSettings.add(WingsConfig.serverSettings.items.angelWings);
+        wingSettings.add(WingsConfig.serverSettings.items.evilWings);
     }
 
     @Override
     protected void serialize(PacketBuffer buf)
     {
-        ImmutableSet<Map.Entry<ResourceLocation, WingSettings>> entries = settings.entrySet();
-        buf.writeInt(entries.size());
-        for (Map.Entry<ResourceLocation, WingSettings> entry : entries)
+        buf.writeInt(wingSettings.size());
+        for (WingSettings settings : wingSettings)
         {
-            buf.writeResourceLocation(entry.getKey());
-            WingSettings value = entry.getValue();
-            buf.writeInt(value.getRequiredFlightSatiation());
-            buf.writeFloat(value.getFlyingExertion());
-            buf.writeInt(value.getRequiredLandSatiation());
-            buf.writeFloat(value.getLandingExertion());
-            buf.writeShort(value.getItemDurability());
+            buf.writeResourceLocation(settings.getResourceLocation());
+            buf.writeInt(settings.getRequiredFlightSatiation());
+            buf.writeFloat(settings.getFlyingExertion());
+            buf.writeInt(settings.getRequiredLandSatiation());
+            buf.writeFloat(settings.getLandingExertion());
+            buf.writeShort(settings.getItemDurability());
         }
     }
 
     @Override
     protected void deserialize(PacketBuffer buf)
     {
-        ImmutableMap.Builder<ResourceLocation, WingSettings> builder = ImmutableMap.builder();
-        for (int remaining = buf.readInt(); remaining-- > 0; )
+        wingSettings.clear();
+        for (int i = buf.readInt(); i-- > 0; )
         {
-            builder.put(
-                    buf.readResourceLocation(),
-                    ImmutableWingSettings.of(
-                            buf.readInt(),
-                            buf.readFloat(),
-                            buf.readInt(),
-                            buf.readFloat(),
-                            buf.readShort()
-                    )
-            );
+            wingSettings.add(ImmutableWingSettings.of(buf.readResourceLocation(), buf.readInt(), buf.readFloat(), buf.readInt(), buf.readFloat(), buf.readShort()));
         }
-        settings = builder.build();
     }
 
     @Override
     protected void process(MessageContext ctx)
     {
-        for (Map.Entry<ResourceLocation, WingSettings> entry : settings.entrySet())
+        for (WingSettings settings : wingSettings)
         {
-            Item item = ForgeRegistries.ITEMS.getValue(entry.getKey());
-            if (item instanceof ItemWings)
-            {
-                ((ItemWings) item).setSettings(entry.getValue());
-            }
+            Item item = ForgeRegistries.ITEMS.getValue(settings.getResourceLocation());
+            if (item instanceof ItemWings) ((ItemWings) item).setSettings(settings);
         }
     }
 }

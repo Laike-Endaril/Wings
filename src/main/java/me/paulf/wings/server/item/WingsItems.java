@@ -1,9 +1,9 @@
 package me.paulf.wings.server.item;
 
 import me.paulf.wings.WingsMod;
+import me.paulf.wings.config.WingsConfig;
+import me.paulf.wings.config.server.ConfigWingSettings;
 import me.paulf.wings.server.block.WingsBlocks;
-import me.paulf.wings.server.config.ConfigWingSettings;
-import me.paulf.wings.server.config.WingsItemsConfig;
 import me.paulf.wings.server.item.group.ItemGroupWings;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.Reg;
@@ -55,15 +55,15 @@ public final class WingsItems
                         .setCreativeTab(ItemGroupWings.instance())
                         .setContainerItem(Items.GLASS_BOTTLE), "bat_blood"
                 ),
-                createWings(Names.ANGEL, WingsMod.instance()::createAvianWings, WingsItemsConfig.ANGEL),
-                createWings(Names.SLIME, WingsMod.instance()::createInsectoidWings, WingsItemsConfig.SLIME),
-                createWings(Names.BLUE_BUTTERFLY, WingsMod.instance()::createInsectoidWings, WingsItemsConfig.BLUE_BUTTERFLY),
-                createWings(Names.MONARCH_BUTTERFLY, WingsMod.instance()::createInsectoidWings, WingsItemsConfig.MONARCH_BUTTERFLY),
-                createWings(Names.FIRE, WingsMod.instance()::createAvianWings, WingsItemsConfig.FIRE),
-                createWings(Names.BAT, WingsMod.instance()::createAvianWings, WingsItemsConfig.BAT),
-                createWings(Names.FAIRY, WingsMod.instance()::createInsectoidWings, WingsItemsConfig.FAIRY),
-                createWings(Names.EVIL, WingsMod.instance()::createAvianWings, WingsItemsConfig.EVIL),
-                createWings(Names.DRAGON, WingsMod.instance()::createAvianWings, WingsItemsConfig.DRAGON)
+                createWings(Names.ANGEL, WingsMod.instance()::createAvianWings, WingsConfig.serverSettings.items.angelWings),
+                createWings(Names.SLIME, WingsMod.instance()::createInsectoidWings, WingsConfig.serverSettings.items.slimeWings),
+                createWings(Names.BLUE_BUTTERFLY, WingsMod.instance()::createInsectoidWings, WingsConfig.serverSettings.items.blueButterflyWings),
+                createWings(Names.MONARCH_BUTTERFLY, WingsMod.instance()::createInsectoidWings, WingsConfig.serverSettings.items.monarchWings),
+                createWings(Names.FIRE, WingsMod.instance()::createAvianWings, WingsConfig.serverSettings.items.fireWings),
+                createWings(Names.BAT, WingsMod.instance()::createAvianWings, WingsConfig.serverSettings.items.batWings),
+                createWings(Names.FAIRY, WingsMod.instance()::createInsectoidWings, WingsConfig.serverSettings.items.fairyWings),
+                createWings(Names.EVIL, WingsMod.instance()::createAvianWings, WingsConfig.serverSettings.items.evilWings),
+                createWings(Names.DRAGON, WingsMod.instance()::createAvianWings, WingsConfig.serverSettings.items.dragonWings)
         );
     }
 

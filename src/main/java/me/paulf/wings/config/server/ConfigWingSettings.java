@@ -1,48 +1,44 @@
-package me.paulf.wings.server.config;
+package me.paulf.wings.config.server;
 
 import me.paulf.wings.server.item.ImmutableWingSettings;
 import me.paulf.wings.server.item.WingSettings;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Config;
 
-@SuppressWarnings("DeprecatedIsStillUsed")
+import static me.paulf.wings.WingsMod.MODID;
+
 public final class ConfigWingSettings implements WingSettings
 {
-    private final ResourceLocation key;
+    private final ResourceLocation resourceLocation;
 
-    @Deprecated
-    @Config.LangKey("config.wings.items.settings.requiredFlightSatiation")
+    @Config.LangKey(MODID + ".config.requiredFlightSatiation")
     @Config.RangeInt(min = 0, max = 20)
     public int requiredFlightSatiation;
 
-    @Deprecated
-    @Config.LangKey("config.wings.items.settings.flyingExertion")
+    @Config.LangKey(MODID + ".config.flyingExertion")
     @Config.RangeDouble(min = 0.0D, max = 10.0D)
     public double flyingExertion;
 
-    @Deprecated
-    @Config.LangKey("config.wings.items.settings.requiredLandSatiation")
+    @Config.LangKey(MODID + ".config.requiredLandSatiation")
     @Config.RangeInt(min = 0, max = 20)
     public int requiredLandSatiation;
 
-    @Deprecated
-    @Config.LangKey("config.wings.items.settings.landingExertion")
+    @Config.LangKey(MODID + ".config.landingExertion")
     @Config.RangeDouble(min = 0.0D, max = 10.0D)
     public double landingExertion;
 
-    @Deprecated
-    @Config.LangKey("config.wings.items.settings.durability")
+    @Config.LangKey(MODID + ".config.durability")
     @Config.RangeInt(min = 0, max = Short.MAX_VALUE)
     public int itemDurability;
 
-    ConfigWingSettings(ResourceLocation key, int itemDurability)
+    ConfigWingSettings(ResourceLocation resourceLocation, int itemDurability)
     {
-        this(key, 7, 0.001D, 2, 0.08D, itemDurability);
+        this(resourceLocation, 7, 0.001D, 2, 0.08D, itemDurability);
     }
 
-    private ConfigWingSettings(ResourceLocation key, int requiredFlightSatiation, double flyingExertion, int requiredLandSatiation, double landingExertion, int itemDurability)
+    private ConfigWingSettings(ResourceLocation resourceLocation, int requiredFlightSatiation, double flyingExertion, int requiredLandSatiation, double landingExertion, int itemDurability)
     {
-        this.key = key;
+        this.resourceLocation = resourceLocation;
         this.requiredFlightSatiation = requiredFlightSatiation;
         this.flyingExertion = flyingExertion;
         this.requiredLandSatiation = requiredLandSatiation;
@@ -50,9 +46,10 @@ public final class ConfigWingSettings implements WingSettings
         this.itemDurability = itemDurability;
     }
 
-    public ResourceLocation getKey()
+    @Override
+    public ResourceLocation getResourceLocation()
     {
-        return key;
+        return resourceLocation;
     }
 
     @Override
@@ -87,6 +84,6 @@ public final class ConfigWingSettings implements WingSettings
 
     public WingSettings toImmutable()
     {
-        return ImmutableWingSettings.of(getRequiredFlightSatiation(), getFlyingExertion(), getRequiredLandSatiation(), getLandingExertion(), getItemDurability());
+        return ImmutableWingSettings.of(getResourceLocation(), getRequiredFlightSatiation(), getFlyingExertion(), getRequiredLandSatiation(), getLandingExertion(), getItemDurability());
     }
 }
