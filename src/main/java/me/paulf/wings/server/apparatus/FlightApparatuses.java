@@ -5,7 +5,6 @@ import me.paulf.wings.config.WingsConfig;
 import me.paulf.wings.util.CapabilityHolder;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.HandlerSlot;
-import me.paulf.wings.util.Util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -73,19 +72,18 @@ public final class FlightApparatuses
         @Override
         public ItemStack find(EntityPlayer player)
         {
+            ItemStack found = ItemStack.EMPTY;
             for (HandlerSlot slot : WingsMod.instance().getWingsAccessor().enumerate(player))
             {
                 ItemStack stack = slot.get();
-                if (has(stack, null))
+                if (Arrays.asList(WingsConfig.serverSettings.wearObstructions).contains(stack.getItem().getRegistryName().toString()))
                 {
-                    return stack;
+                    return ItemStack.EMPTY;
                 }
-                if (!stack.isEmpty() && Arrays.asList(WingsConfig.serverSettings.wearObstructions).contains(Util.getName(stack.getItem()).toString()))
-                {
-                    break;
-                }
+
+                if (found == ItemStack.EMPTY && has(stack, null)) found = stack;
             }
-            return ItemStack.EMPTY;
+            return found;
         }
     }
 }

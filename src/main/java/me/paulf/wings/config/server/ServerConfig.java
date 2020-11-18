@@ -13,5 +13,9 @@ public class ServerConfig
     public ItemsConfig items = new ItemsConfig();
 
     @Config.LangKey(MODID + ".config.wearObstructions")
-    public String[] wearObstructions = new String[]{"minecraft:elytra"};
+    public String[] wearObstructions = new String[]
+            {
+                    "minecraft:elytra",
+                    "wearablebackpacks:backpack"
+            };
 }

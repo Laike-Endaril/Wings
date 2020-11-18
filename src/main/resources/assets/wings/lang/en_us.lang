@@ -37,7 +37,7 @@ wings.config.clientSettings=Client Settings
 wings.config.ores=Ores
 wings.config.items=Items
 wings.config.wearObstructions=Wear Obstructions
-wings.config.wearObstructions.tooltip=Customize which items when worn in the chest slot obstruct wings in the baubles body slot.
+wings.config.wearObstructions.tooltip=When one of these items is in the chest or baubles chest slot, worn wings do not render or function
 
 wings.config.fairyDustOreGen=Fairy Dust Ore Generation
 wings.config.amethystOreGen=Amethyst Ore Generation
