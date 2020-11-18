@@ -4,10 +4,15 @@ import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.ItemAccessor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.function.Consumer;
 
@@ -17,6 +22,11 @@ public final class WingsMod
     public static final String MODID = "wings";
     public static final String NAME = "Wings";
     public static final String VERSION = "L-1.12.2.003";
+
+    public WingsMod()
+    {
+        MinecraftForge.EVENT_BUS.register(WingsMod.class);
+    }
 
     @SidedProxy(
             clientSide = "me.paulf.wings.client.ClientProxy",
@@ -28,6 +38,12 @@ public final class WingsMod
     public static WingsMod instance()
     {
         return Holder.INSTANCE;
+    }
+
+    @SubscribeEvent
+    public static void saveConfig(ConfigChangedEvent.OnConfigChangedEvent event)
+    {
+        if (event.getModID().equals(MODID)) ConfigManager.sync(MODID, Config.Type.INSTANCE);
     }
 
     @Mod.EventHandler
