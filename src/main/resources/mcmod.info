@@ -6,6 +6,6 @@
   "version": "${version}",
   "mcversion": "${mcversion}",
   "authorList": ["pau101"],
-  "credits": "\nLaike_Endaril\nKazuya79\nPhorcis (Russian translation)\nTommsy64 (Various Improvements)"
+  "credits": "\nLaike_Endaril\nKazuya79"
 }
 ]
